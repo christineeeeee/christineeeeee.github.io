@@ -12,12 +12,15 @@
     
     
     <item>
-      <title>My First Post</title>
-      <link>https://christineeeeee.com/posts/my-first-post/</link>
+      <title>Markdown Cheatsheet</title>
+      <link>https://christineeeeee.com/posts/markdown-cheatsheet/</link>
       <pubDate>Mon, 27 Jan 2020 19:23:34 +0000</pubDate>
       
-      <guid>https://christineeeeee.com/posts/my-first-post/</guid>
-      <description>Hello world.</description>
+      <guid>https://christineeeeee.com/posts/markdown-cheatsheet/</guid>
+      <description>Heading 1 Markup : # Heading 1 # -OR- Markup : ============= (below H1 text)  Heading 2 Markup : ## Heading 2 ## -OR- Markup: --------------- (below H2 text)  Heading 3 Markup : ### Heading 3 ###  Heading 4 Markup : #### Heading 4 ####  Common text
+Markup : Common text  Emphasized text
+Markup : _Emphasized text_ or *Emphasized text*  Strikethrough text
+Markup : ~~Strikethrough text~~  Strong text</description>
     </item>
     
   </channel>
