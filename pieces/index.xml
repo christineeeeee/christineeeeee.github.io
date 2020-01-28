@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Stop this train</title>
-    <link>https://christineeeeee.com/</link>
-    <description>Recent content on Stop this train</description>
+    <title>Pieces on Stop this train</title>
+    <link>https://christineeeeee.com/pieces/</link>
+    <description>Recent content in Pieces on Stop this train</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Mon, 27 Jan 2020 22:37:24 +0000</lastBuildDate>
     
-	<atom:link href="https://christineeeeee.com/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://christineeeeee.com/pieces/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -40,15 +40,6 @@
 十一月尚未到来
 透过它的窗口 我望见了十二月 十二月大雪弥漫
 cr. 林白</description>
-    </item>
-    
-    <item>
-      <title>About Christine</title>
-      <link>https://christineeeeee.com/me/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://christineeeeee.com/me/</guid>
-      <description></description>
     </item>
     
   </channel>
