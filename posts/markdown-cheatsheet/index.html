@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="author" content="Christine Li">
-    <meta name="description" content="Christine Li&#39;s Blog">
-    <meta name="keywords" content="blog,student,personal">
+    <meta name="author" content="Author">
+    
+    
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Markdown Cheatsheet"/>
@@ -31,7 +31,7 @@ Markup : ~~Strikethrough text~~  Strong text" />
       <base href="https://christineeeeee.com/posts/markdown-cheatsheet/">
     
     <title>
-  Markdown Cheatsheet · Christine&#39;s Blog
+  Markdown Cheatsheet · Title
 </title>
 
     
@@ -73,7 +73,7 @@ Markup : ~~Strikethrough text~~  Strong text" />
       <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="https://christineeeeee.com/">
-      Christine&#39;s Blog
+      Title
     </a>
     
     <input type="checkbox" id="menu-toggle" />
@@ -82,11 +82,23 @@ Markup : ~~Strikethrough text~~  Strong text" />
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="https://christineeeeee.com/posts/">Blog</a>
+            <a class="navigation-link" href="https://christineeeeee.com/posts/">Posts</a>
           </li>
         
           <li class="navigation-item">
             <a class="navigation-link" href="https://christineeeeee.com/about">About</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://allenfrostline.com">Friends</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/todo">To-Do</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="mailto:xul40@uchicago.edu">Contact</a>
           </li>
         
       
@@ -353,7 +365,26 @@ Content Cell  | Content Cell
         
 
 
-        
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "disqus_vFluoX5MZ9" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
         
         
       </footer>
@@ -383,17 +414,7 @@ Content Cell  | Content Cell
       <footer class="footer">
   <section class="container">
     
-      <p>This is footer.</p>
     
-    
-      
-        © 2020
-      
-       Christine Li 
-    
-    
-       · 
-      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
     
     
   </section>
