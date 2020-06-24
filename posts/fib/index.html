@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Christine">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="5 Ways of Generating Fibonacci Numbers"/>
+<meta name="twitter:description" content="This is just a quick note about 5 ways of generating Fibonacci numbers. Here, I want to create a function whose argument is an int number &ldquo;n&rdquo; (representing which number to return in the Fibonacci sequence). This function will return the Fibonacci number I want. In my definition for this question, I want the Fibonacci sequence to start from 0.
+1. Recursion without Cache 1 2 3 4 5  def fib(n): if n &lt;= 2: return n - 1 else: return fib(n - 1) &#43; fib(n - 2)   The time complexity of this function is $O(1."/>
+
+    <meta property="og:title" content="5 Ways of Generating Fibonacci Numbers" />
+<meta property="og:description" content="This is just a quick note about 5 ways of generating Fibonacci numbers. Here, I want to create a function whose argument is an int number &ldquo;n&rdquo; (representing which number to return in the Fibonacci sequence). This function will return the Fibonacci number I want. In my definition for this question, I want the Fibonacci sequence to start from 0.
+1. Recursion without Cache 1 2 3 4 5  def fib(n): if n &lt;= 2: return n - 1 else: return fib(n - 1) &#43; fib(n - 2)   The time complexity of this function is $O(1." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://christineeeeee.com/posts/fib/" />
+<meta property="article:published_time" content="2020-03-07T01:24:15+00:00" />
+<meta property="article:modified_time" content="2020-03-07T01:24:15+00:00" />
+
+
+    
+      <base href="https://christineeeeee.com/posts/fib/">
+    
+    <title>
+  5 Ways of Generating Fibonacci Numbers · Stop this train
+</title>
+
+    
+      <link rel="canonical" href="https://christineeeeee.com/posts/fib/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.c6a6f7e4e5b9eae62968f9dee6cad8903a7a12c11df9305249ee05c53679cafe.css" integrity="sha256-xqb35OW56uYpaPne5srYkDp6EsEd&#43;TBSSe4FxTZ5yv4=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+      <link rel="stylesheet" href="/css/custom.css" />
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.63.1" />
+  </head>
+
+  
+  
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Stop this train
+    </a>
+    
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/pieces/">Pieces</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">5 Ways of Generating Fibonacci Numbers</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-03-07T01:24:15Z'>
+                March 7, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              4-minute read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="/tags/python/">Python</a>
+      <span class="separator">•</span>
+    <a href="/tags/algorithms/">Algorithms</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <p>This is just a quick note about 5 ways of generating Fibonacci numbers. Here, I want to create a function whose argument is an int number &ldquo;n&rdquo; (representing which number to return in the Fibonacci sequence). This function will return the Fibonacci number I want. In my definition for this question, I want the Fibonacci sequence to start from 0.</p>
+<h4 id="1-recursion-without-cache">1. Recursion without Cache</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">fib</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">if</span> <span style="color:#111">n</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#00a8c8">else</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">fib</span><span style="color:#111">(</span><span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#111">)</span> <span style="color:#f92672">+</span> <span style="color:#111">fib</span><span style="color:#111">(</span><span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>The time complexity of this function is $O(1.618^{n})$ by solving the characteristic equation of F(n) = F(n-1) + F(n-2).</p>
+<h4 id="2-recursion-with-cache">2. Recursion with Cache</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">fib</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">if</span> <span style="color:#111">n</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#00a8c8">elif</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">fib</span><span style="color:#f92672">.</span><span style="color:#111">cache</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">fib</span><span style="color:#f92672">.</span><span style="color:#111">cache</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span>
+    <span style="color:#00a8c8">else</span><span style="color:#111">:</span>
+        <span style="color:#111">result</span> <span style="color:#f92672">=</span> <span style="color:#111">fib</span><span style="color:#111">(</span><span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#111">)</span> <span style="color:#f92672">+</span> <span style="color:#111">fib</span><span style="color:#111">(</span><span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span><span style="color:#111">)</span>
+        <span style="color:#111">fib</span><span style="color:#f92672">.</span><span style="color:#111">cache</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">result</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">result</span>
+<span style="color:#111">fib</span><span style="color:#f92672">.</span><span style="color:#111">cache</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>By cacheing to avoid repeated calculation, we could significantly reduce the time complexity of the recursion method. The time complexity of this approach is $O(n)$.</p>
+<h4 id="3-induction-without-cache">3. Induction without Cache</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">fib</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">if</span> <span style="color:#111">n</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#111">a</span><span style="color:#111">,</span> <span style="color:#111">b</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#111">,</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">i</span> <span style="color:#f92672">in</span> <span style="color:#111">range</span><span style="color:#111">(</span><span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#111">a</span><span style="color:#111">,</span> <span style="color:#111">b</span> <span style="color:#f92672">=</span> <span style="color:#111">b</span><span style="color:#111">,</span> <span style="color:#111">a</span> <span style="color:#f92672">+</span> <span style="color:#111">b</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#111">b</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>The time complexity of the third approach is $O(n^{2})$.</p>
+<h4 id="4-induction-with-cache">4. Induction with Cache</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">fib</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#111">fib_list</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#111">]</span>
+    <span style="color:#00a8c8">if</span> <span style="color:#111">n</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#111">:</span>
+        <span style="color:#111">fib_list</span><span style="color:#f92672">.</span><span style="color:#111">append</span><span style="color:#111">(</span><span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#111">)</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#111">a</span><span style="color:#111">,</span> <span style="color:#111">b</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#111">,</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">i</span> <span style="color:#f92672">in</span> <span style="color:#111">range</span><span style="color:#111">(</span><span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#111">a</span><span style="color:#111">,</span> <span style="color:#111">b</span> <span style="color:#f92672">=</span> <span style="color:#111">b</span><span style="color:#111">,</span> <span style="color:#111">a</span> <span style="color:#f92672">+</span> <span style="color:#111">b</span>
+        <span style="color:#111">fib_list</span><span style="color:#f92672">.</span><span style="color:#111">append</span><span style="color:#111">(</span><span style="color:#111">b</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#111">b</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Here, maybe you don&rsquo;t see the point of cacheing the Fibonacci sequence in the induction case since we still let the computer do the calculation which doesn&rsquo;t use the value in our list. However, cache will be useful in our next step.</p>
+<p>The time complexity of this method is O($n^{2}$).</p>
+<h4 id="5-math-formula">5. Math Formula</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">fib</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">if</span> <span style="color:#111">n</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#111">sqrt_5</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>
+    <span style="color:#111">term1</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#111">sqrt_5</span><span style="color:#111">)</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>
+    <span style="color:#111">term2</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> <span style="color:#111">sqrt_5</span><span style="color:#111">)</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>
+    <span style="color:#111">result</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">term1</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#111">(</span><span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#111">)</span> <span style="color:#f92672">-</span> <span style="color:#111">term2</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#111">(</span><span style="color:#111">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#111">)</span><span style="color:#111">)</span> <span style="color:#f92672">/</span> <span style="color:#111">sqrt_5</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#111">int</span><span style="color:#111">(</span><span style="color:#111">result</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>The time complexity of the mathematical method is $O(1)$ since it only computes once using the formula. It&rsquo;s the most efficient way.</p>
+<h4 id="what-if-we-want-to-print-the-first-n-numbers-fibonacci-sequence-instead-of-no-n-fibonacci-number">What if we want to print the first n numbers (Fibonacci sequence) instead of No. n Fibonacci number?</h4>
+<h4 id="1-recursion-without-cache-1">1. Recursion without Cache</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">fib</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">def</span> <span style="color:#75af00">f</span><span style="color:#111">(</span><span style="color:#111">k</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">k</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#111">:</span>
+            <span style="color:#00a8c8">return</span> <span style="color:#111">k</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+        <span style="color:#00a8c8">else</span><span style="color:#111">:</span>
+            <span style="color:#00a8c8">return</span> <span style="color:#111">f</span><span style="color:#111">(</span><span style="color:#111">k</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#111">)</span> <span style="color:#f92672">+</span> <span style="color:#111">f</span><span style="color:#111">(</span><span style="color:#111">k</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">i</span> <span style="color:#f92672">in</span> <span style="color:#111">range</span><span style="color:#111">(</span><span style="color:#ae81ff">1</span><span style="color:#111">,</span> <span style="color:#111">n</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">f</span><span style="color:#111">(</span><span style="color:#111">i</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Since there&rsquo;s no cache here, as you could imagine, the time complexity of this method would still be $O(1.618^{n})$ since for each number, we only add one step to let the function print itself. It will be really time-consuming when it becomes large such as 100, not to mention even larger numbers.</p>
+<h4 id="2-recursion-with-cache-1">2. Recursion with Cache</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">fib</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">def</span> <span style="color:#75af00">f</span><span style="color:#111">(</span><span style="color:#111">k</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">k</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#111">:</span>
+            <span style="color:#00a8c8">return</span> <span style="color:#111">k</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+        <span style="color:#00a8c8">elif</span> <span style="color:#111">k</span> <span style="color:#f92672">in</span> <span style="color:#111">f</span><span style="color:#f92672">.</span><span style="color:#111">cache</span><span style="color:#111">:</span>
+            <span style="color:#00a8c8">return</span> <span style="color:#111">f</span><span style="color:#f92672">.</span><span style="color:#111">cache</span><span style="color:#111">[</span><span style="color:#111">k</span><span style="color:#111">]</span>
+        <span style="color:#00a8c8">else</span><span style="color:#111">:</span>
+            <span style="color:#111">result</span> <span style="color:#f92672">=</span> <span style="color:#111">f</span><span style="color:#111">(</span><span style="color:#111">k</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#111">)</span> <span style="color:#f92672">+</span> <span style="color:#111">f</span><span style="color:#111">(</span><span style="color:#111">k</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span><span style="color:#111">)</span>
+            <span style="color:#111">f</span><span style="color:#f92672">.</span><span style="color:#111">cache</span><span style="color:#111">[</span><span style="color:#111">k</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">result</span>
+            <span style="color:#00a8c8">return</span> <span style="color:#111">result</span>
+    <span style="color:#111">f</span><span style="color:#f92672">.</span><span style="color:#111">cache</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+    <span style="color:#111">f</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#111">list</span><span style="color:#111">(</span><span style="color:#111">f</span><span style="color:#f92672">.</span><span style="color:#111">cache</span><span style="color:#f92672">.</span><span style="color:#111">values</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Same, after computing and cacheing, for every number in our cache, we only need to print it, so the time complexity doesn&rsquo;t change and still remains $O(n)$.</p>
+<h4 id="3-induction-without-cache-1">3. Induction without Cache</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">fib</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">def</span> <span style="color:#75af00">f</span><span style="color:#111">(</span><span style="color:#111">k</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">k</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#111">:</span>
+            <span style="color:#00a8c8">return</span> <span style="color:#111">k</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+        <span style="color:#111">a</span><span style="color:#111">,</span> <span style="color:#111">b</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#111">,</span> <span style="color:#ae81ff">1</span>
+        <span style="color:#00a8c8">for</span> <span style="color:#111">i</span> <span style="color:#f92672">in</span> <span style="color:#111">range</span><span style="color:#111">(</span><span style="color:#111">k</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#111">:</span>
+            <span style="color:#111">a</span><span style="color:#111">,</span> <span style="color:#111">b</span> <span style="color:#f92672">=</span> <span style="color:#111">b</span><span style="color:#111">,</span> <span style="color:#111">a</span> <span style="color:#f92672">+</span> <span style="color:#111">b</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">b</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">i</span> <span style="color:#f92672">in</span> <span style="color:#111">range</span><span style="color:#111">(</span><span style="color:#ae81ff">1</span><span style="color:#111">,</span> <span style="color:#111">n</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#111">f</span><span style="color:#111">(</span><span style="color:#111">i</span><span style="color:#111">)</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Time complexity of this method is $O(n^2)$</p>
+<h4 id="4-induction-with-cache-1">4. Induction with Cache</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">fib</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#111">fib_list</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#ae81ff">0</span><span style="color:#111">,</span> <span style="color:#ae81ff">1</span><span style="color:#111">]</span>
+
+    <span style="color:#00a8c8">def</span> <span style="color:#75af00">f</span><span style="color:#111">(</span><span style="color:#111">k</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">k</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#111">:</span>
+            <span style="color:#00a8c8">return</span> <span style="color:#111">k</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+        <span style="color:#111">a</span><span style="color:#111">,</span> <span style="color:#111">b</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#111">,</span> <span style="color:#ae81ff">1</span>
+        <span style="color:#00a8c8">for</span> <span style="color:#111">i</span> <span style="color:#f92672">in</span> <span style="color:#111">range</span><span style="color:#111">(</span><span style="color:#111">k</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#111">:</span>
+            <span style="color:#111">a</span><span style="color:#111">,</span> <span style="color:#111">b</span> <span style="color:#f92672">=</span> <span style="color:#111">b</span><span style="color:#111">,</span> <span style="color:#111">a</span> <span style="color:#f92672">+</span> <span style="color:#111">b</span>
+            <span style="color:#111">fib_list</span><span style="color:#f92672">.</span><span style="color:#111">append</span><span style="color:#111">(</span><span style="color:#111">b</span><span style="color:#111">)</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">b</span>
+
+    <span style="color:#111">f</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#111">fib_list</span><span style="color:#111">[</span><span style="color:#111">:</span><span style="color:#111">n</span><span style="color:#111">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Using cache, we could easily return the whole Fibonacci sequence with the time complexity $O(n^2)$</p>
+<h4 id="5-math-formula-1">5. Math Formula</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">fib</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#111">fib_list</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#ae81ff">0</span><span style="color:#111">]</span>
+    <span style="color:#00a8c8">def</span> <span style="color:#75af00">f</span><span style="color:#111">(</span><span style="color:#111">k</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">k</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span><span style="color:#111">:</span>
+            <span style="color:#00a8c8">return</span> <span style="color:#ae81ff">0</span>
+        <span style="color:#00a8c8">else</span><span style="color:#111">:</span>
+            <span style="color:#00a8c8">for</span> <span style="color:#111">i</span> <span style="color:#f92672">in</span> <span style="color:#111">range</span><span style="color:#111">(</span><span style="color:#ae81ff">2</span><span style="color:#111">,</span> <span style="color:#111">k</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#111">)</span><span style="color:#111">:</span>
+                <span style="color:#111">sqrt_5</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>
+                <span style="color:#111">term1</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#111">sqrt_5</span><span style="color:#111">)</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>
+                <span style="color:#111">term2</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> <span style="color:#111">sqrt_5</span><span style="color:#111">)</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>
+                <span style="color:#111">result</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">term1</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#111">(</span><span style="color:#111">i</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#111">)</span> <span style="color:#f92672">-</span> <span style="color:#111">term2</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#111">(</span><span style="color:#111">i</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#111">)</span><span style="color:#111">)</span> <span style="color:#f92672">/</span> <span style="color:#111">sqrt_5</span>
+                <span style="color:#111">fib_list</span><span style="color:#f92672">.</span><span style="color:#111">append</span><span style="color:#111">(</span><span style="color:#111">int</span><span style="color:#111">(</span><span style="color:#111">result</span><span style="color:#111">)</span><span style="color:#111">)</span>
+    <span style="color:#111">f</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#111">fib_list</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>The time complexity of this algorithm is $O(n)$.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        <script src="https://utteranc.es/client.js"
+  repo= "christineeeeee/christineeeeee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+      </footer>
+    </article>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js" id="MathJax-script"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [
+          ['$', '$'], ['\\(', '\\)']
+        ],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+
+</footer>
+
+    </main>
+
+    
+
+  </body>
+
+</html>

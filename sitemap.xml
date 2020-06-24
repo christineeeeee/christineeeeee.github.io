@@ -13,13 +13,33 @@
   </url>
   
   <url>
+    <loc>https://christineeeeee.com/tags/product/</loc>
+    <lastmod>2020-04-28T11:11:11+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://christineeeeee.com/</loc>
+    <lastmod>2020-04-28T11:11:11+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/tags/</loc>
     <lastmod>2020-04-28T11:11:11+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://christineeeeee.com/posts/duolingo/</loc>
     <lastmod>2020-04-23T21:16:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/tags/movie/</loc>
+    <lastmod>2020-04-09T17:57:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/tags/thoughts/</loc>
+    <lastmod>2020-04-09T17:57:00+00:00</lastmod>
   </url>
   
   <url>
@@ -48,6 +68,21 @@
   </url>
   
   <url>
+    <loc>https://christineeeeee.com/posts/fib/</loc>
+    <lastmod>2020-03-07T01:24:15+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/tags/algorithms/</loc>
+    <lastmod>2020-03-07T01:24:15+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/tags/python/</loc>
+    <lastmod>2020-03-07T01:24:15+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://christineeeeee.com/pieces/mar2020/</loc>
     <lastmod>2020-03-01T22:37:24+00:00</lastmod>
   </url>
@@ -73,10 +108,6 @@
   
   <url>
     <loc>https://christineeeeee.com/me/</loc>
-  </url>
-  
-  <url>
-    <loc>https://christineeeeee.com/tags/</loc>
   </url>
   
 </urlset>

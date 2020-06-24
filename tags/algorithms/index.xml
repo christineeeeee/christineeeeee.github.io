@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Algorithms on Stop this train</title>
+    <link>https://christineeeeee.com/tags/algorithms/</link>
+    <description>Recent content in Algorithms on Stop this train</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 07 Mar 2020 01:24:15 +0000</lastBuildDate>
+    
+	<atom:link href="https://christineeeeee.com/tags/algorithms/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>5 Ways of Generating Fibonacci Numbers</title>
+      <link>https://christineeeeee.com/posts/fib/</link>
+      <pubDate>Sat, 07 Mar 2020 01:24:15 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/fib/</guid>
+      <description>This is just a quick note about 5 ways of generating Fibonacci numbers. Here, I want to create a function whose argument is an int number &amp;ldquo;n&amp;rdquo; (representing which number to return in the Fibonacci sequence). This function will return the Fibonacci number I want. In my definition for this question, I want the Fibonacci sequence to start from 0.
+1. Recursion without Cache 1 2 3 4 5  def fib(n): if n &amp;lt;= 2: return n - 1 else: return fib(n - 1) + fib(n - 2)   The time complexity of this function is $O(1.</description>
+    </item>
+    
+  </channel>
+</rss>

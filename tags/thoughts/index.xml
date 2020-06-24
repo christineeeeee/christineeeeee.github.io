@@ -1,37 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Stop this train</title>
-    <link>https://christineeeeee.com/posts/</link>
-    <description>Recent content in Posts on Stop this train</description>
+    <title>Thoughts on Stop this train</title>
+    <link>https://christineeeeee.com/tags/thoughts/</link>
+    <description>Recent content in Thoughts on Stop this train</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 28 Apr 2020 11:11:11 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 09 Apr 2020 17:57:00 +0000</lastBuildDate>
     
-	<atom:link href="https://christineeeeee.com/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://christineeeeee.com/tags/thoughts/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Notes and Thoughts of Quibi</title>
-      <link>https://christineeeeee.com/posts/quibi/</link>
-      <pubDate>Tue, 28 Apr 2020 11:11:11 +0000</pubDate>
-      
-      <guid>https://christineeeeee.com/posts/quibi/</guid>
-      <description>1
-Like everything in the world, the launch of Quibi was deeply affected by the COVID-19. Maybe in Jeffrey&amp;rsquo;s plan, there would be a huge ceremony to announce the birth of Quibi, however, nowadays, with the process of quarantine, any pre-plan seemed in vain. Boldly but not surprisingly, like he refused to produce the Beta version of this app to let a small portion of potential consumers to test it first with $1 billion funding, Jeffrey Katzenberg, the founder of Quibi, decided to not delay the launch of this app.</description>
-    </item>
-    
-    <item>
-      <title>Duolingo&#39;s English Proficiency Test</title>
-      <link>https://christineeeeee.com/posts/duolingo/</link>
-      <pubDate>Thu, 23 Apr 2020 21:16:00 +0000</pubDate>
-      
-      <guid>https://christineeeeee.com/posts/duolingo/</guid>
-      <description>1.
-As I was looking through Weibo(the most popular social platform in China, like Twitter), I noticed one of my friend&amp;rsquo;s weibo saying that she was pretty upset because her Duolingo English Proficiency Test&amp;rsquo;s result was invalid again. This was her third time taking Duolingo Test and for the first and the second time, the result was cancelled, too.
-2.
-For international students, taking TOEFL or IELTS test is a necessary step if they want to go abroad to have further study.</description>
-    </item>
     
     <item>
       <title>世界上的房思琪们</title>
@@ -142,16 +120,6 @@ Allen：我这里的开心比较笼统。如果像你说的违背了规则或者
 最近能明显感觉到我身体和心智的复苏。从阅读《斯通纳》开始，我就逐渐意识到我有一部分东西活过来了，对新事物重新有了热情（尽管有时候热情还是不持久，会偶尔消退），也有了以前那种一定要把某件事做成的决心。在（被迫）浑浑噩噩了这么久之后，这种盎然让我觉得兴奋。那天跟我妈打电话的时候抱怨自己有时候不想学习，但挂断电话后，我知道自己会actively抱怨自己的状态不好，反而是一种状态苏醒的表现。这让我感到开心。学习方面也是一样，首先是那不勒斯再次让我意识到了自己的幸运，以及自己之所以能糊里糊涂走到今天，纯粹是曾经我给我自己洗脑般灌输一定要不停学习做好自己该做的事情的原因。男朋友H-1B抽中这件事更让我觉得，做好自己该做的事情就好了，剩下的就交给天意。尽完人事后再把剩下的交给天命。我正在慢慢做自己该做的事情。“做正确的事”听起来有些无聊，但的确是恢复生活秩序的一种很重要的方式。coding在我这里总算演变成了“人生中必须攻破的堡垒”一般的存在（虽然我男朋友每天工作都很累，我白天做别的也很累，所以每每白天搞完，晚上他也累我也累就懒得问他了，一个strategy已经拖了一周了…）。至于数学呢，尽管复建有点难受，但第一遍学的时候也是痛苦的，这时候反而能遥遥共情曾经的自己，产生那时候都能过来，这时候自然也可以的想法。
 正是因为这种状态的失而复得，更让我今天不敢轻举妄动，把什么都听了，仰躺在沙发上听podcast，包括现在的打字，也是姿势正确，肩膀背着沙袋，挺直了腰背，丝毫不敢懈怠…磨刀不误砍柴工，我是真的怕我的脖子一直痛下去，只想让他抓紧时间康复吧求求了！
 有时候，既想每天像理科生一样不停不停地算题，又希望自己可以有空闲的时间写很多字看很多电影读很多书。有时候既希望自己可以赚很多钱，又希望自己可以当金丝雀在家瘫着被别人养。</description>
-    </item>
-    
-    <item>
-      <title>5 Ways of Generating Fibonacci Numbers</title>
-      <link>https://christineeeeee.com/posts/fib/</link>
-      <pubDate>Sat, 07 Mar 2020 01:24:15 +0000</pubDate>
-      
-      <guid>https://christineeeeee.com/posts/fib/</guid>
-      <description>This is just a quick note about 5 ways of generating Fibonacci numbers. Here, I want to create a function whose argument is an int number &amp;ldquo;n&amp;rdquo; (representing which number to return in the Fibonacci sequence). This function will return the Fibonacci number I want. In my definition for this question, I want the Fibonacci sequence to start from 0.
-1. Recursion without Cache 1 2 3 4 5  def fib(n): if n &amp;lt;= 2: return n - 1 else: return fib(n - 1) + fib(n - 2)   The time complexity of this function is $O(1.</description>
     </item>
     
   </channel>
