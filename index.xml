@@ -6,10 +6,19 @@
     <description>Recent content on Stop this train</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 28 Apr 2020 11:11:11 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 04 May 2020 17:16:00 +0000</lastBuildDate>
     
 	<atom:link href="https://christineeeeee.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Twint - A Twitter Scaping Tool</title>
+      <link>https://christineeeeee.com/posts/twint/</link>
+      <pubDate>Mon, 04 May 2020 17:16:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/twint/</guid>
+      <description>Recently I&amp;rsquo;ve been working on a python project about a twitter sentiment trading strategy(which will be introduced in my following posts), which requires a large load of tweets. While collecting data on Twitter, I found out that usual data crawling doesn&amp;rsquo;t work here since there&amp;rsquo;s limitation of Twitter&amp;rsquo;s API which only allows us to scrap at most last 3200 Tweets. This post introduces a really interesting and useful python package I found out which could be used to collect data without authentication, API and limitations.</description>
+    </item>
     
     <item>
       <title>Notes and Thoughts of Quibi</title>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Christine">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Twint - A Twitter Scaping Tool"/>
+<meta name="twitter:description" content="Recently I&rsquo;ve been working on a python project about a twitter sentiment trading strategy(which will be introduced in my following posts), which requires a large load of tweets. While collecting data on Twitter, I found out that usual data crawling doesn&rsquo;t work here since there&rsquo;s limitation of Twitter&rsquo;s API which only allows us to scrap at most last 3200 Tweets. This post introduces a really interesting and useful python package I found out which could be used to collect data without authentication, API and limitations."/>
+
+    <meta property="og:title" content="Twint - A Twitter Scaping Tool" />
+<meta property="og:description" content="Recently I&rsquo;ve been working on a python project about a twitter sentiment trading strategy(which will be introduced in my following posts), which requires a large load of tweets. While collecting data on Twitter, I found out that usual data crawling doesn&rsquo;t work here since there&rsquo;s limitation of Twitter&rsquo;s API which only allows us to scrap at most last 3200 Tweets. This post introduces a really interesting and useful python package I found out which could be used to collect data without authentication, API and limitations." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://christineeeeee.com/posts/twint/" />
+<meta property="article:published_time" content="2020-05-04T17:16:00+00:00" />
+<meta property="article:modified_time" content="2020-05-04T17:16:00+00:00" />
+
+
+    
+      <base href="https://christineeeeee.com/posts/twint/">
+    
+    <title>
+  Twint - A Twitter Scaping Tool · Stop this train
+</title>
+
+    
+      <link rel="canonical" href="https://christineeeeee.com/posts/twint/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.c6a6f7e4e5b9eae62968f9dee6cad8903a7a12c11df9305249ee05c53679cafe.css" integrity="sha256-xqb35OW56uYpaPne5srYkDp6EsEd&#43;TBSSe4FxTZ5yv4=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+      <link rel="stylesheet" href="/css/custom.css" />
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.63.1" />
+  </head>
+
+  
+  
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Stop this train
+    </a>
+    
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/pieces/">Pieces</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Twint - A Twitter Scaping Tool</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-05-04T17:16:00Z'>
+                May 4, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="/tags/python/">Python</a>
+      <span class="separator">•</span>
+    <a href="/tags/package/">Package</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <p>Recently I&rsquo;ve been working on a python project about a twitter sentiment trading strategy(which will be introduced in my following posts), which requires a large load of tweets. While collecting data on Twitter, I found out that usual data crawling doesn&rsquo;t work here since there&rsquo;s limitation of Twitter&rsquo;s API which only allows us to scrap at most last 3200 Tweets. This post introduces a really interesting and useful python package I found out which could be used to collect data without authentication, API and limitations. This package is called twint.</p>
+<p>Twint is the shortcut for &ldquo;Twitter Intelligence Tool&rdquo;. Almost everything we need on Twitter could be collected by this powerful tool. It does take time when you wanna collect a load of data, however, it still could give us what we need. I&rsquo;ll briefly explain the process of how I downloaded this package and used it to collect the data I need. Detailed information and instructions about this package could be found in the reference of this post.</p>
+<h4 id="installing">Installing</h4>
+<p>I used pip3 to install the package:</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">pip3</span> <span style="color:#111">install</span> <span style="color:#111">twint</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="collecting-tweets">Collecting Tweets</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">get_tweets</span><span style="color:#111">(</span><span style="color:#111">start_date</span><span style="color:#111">,</span> <span style="color:#111">end_date</span><span style="color:#111">,</span> <span style="color:#111">company_name</span><span style="color:#111">,</span> <span style="color:#111">ticker</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#111">c</span> <span style="color:#f92672">=</span> <span style="color:#111">twint</span><span style="color:#f92672">.</span><span style="color:#111">Config</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">c</span><span style="color:#f92672">.</span><span style="color:#111">Search</span> <span style="color:#f92672">=</span> <span style="color:#111">company_name</span><span style="color:#111">,</span> <span style="color:#111">ticker</span>
+    <span style="color:#111">c</span><span style="color:#f92672">.</span><span style="color:#111">Since</span> <span style="color:#f92672">=</span> <span style="color:#111">start_date</span>
+    <span style="color:#111">c</span><span style="color:#f92672">.</span><span style="color:#111">Until</span> <span style="color:#f92672">=</span> <span style="color:#111">end_date</span>
+    <span style="color:#111">c</span><span style="color:#f92672">.</span><span style="color:#111">Store_csv</span> <span style="color:#f92672">=</span> <span style="color:#111">True</span>
+    <span style="color:#111">c</span><span style="color:#f92672">.</span><span style="color:#111">Lang</span> <span style="color:#f92672">=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">en</span><span style="color:#d88200">&#39;</span>
+    <span style="color:#111">c</span><span style="color:#f92672">.</span><span style="color:#111">Count</span> <span style="color:#f92672">=</span> <span style="color:#111">True</span>
+    <span style="color:#111">c</span><span style="color:#f92672">.</span><span style="color:#111">Hide_output</span> <span style="color:#f92672">=</span> <span style="color:#111">True</span>
+    <span style="color:#111">c</span><span style="color:#f92672">.</span><span style="color:#111">Format</span> <span style="color:#f92672">=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">Tweet id: {id} | Date: {date} | Time: {time} | Tweet: {tweet}</span><span style="color:#d88200">&#39;</span>
+    <span style="color:#111">c</span><span style="color:#f92672">.</span><span style="color:#111">Custom</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">tweet</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">id</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">date</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">time</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">tweet</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+    <span style="color:#111">c</span><span style="color:#f92672">.</span><span style="color:#111">Output</span> <span style="color:#f92672">=</span> <span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">{company_name}_tweets_202001.csv</span><span style="color:#d88200">&#39;</span>
+    <span style="color:#111">twint</span><span style="color:#f92672">.</span><span style="color:#111">run</span><span style="color:#f92672">.</span><span style="color:#111">Search</span><span style="color:#111">(</span><span style="color:#111">c</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>In the package, the author&rsquo;s already written the function for us to search by key words, dates, user names etc.. It also allows us to output the data as different data types such as csv and txt. Here, I wrote a function to use twint to collect tweets that I need, output and store the data in a csv file for future computation. The arguments of this function include the time range of the tweet that I wanna collect and also the key word I want to search.</p>
+<p>Since my strategy is about twitter sentiment in technology sector, I chose ten stocks and used twint to collect tweets about them from January 2020 to May 2020.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">start_date</span> <span style="color:#f92672">=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2020-01-01</span><span style="color:#d88200">&#39;</span>
+<span style="color:#111">end_date</span> <span style="color:#f92672">=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2020-05-31</span><span style="color:#d88200">&#39;</span>
+<span style="color:#111">stock_pool</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">tesla</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">tsla</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">netflix</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">nflx</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">microsoft</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">msft</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">zoom</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">zm</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">apple</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">aapl</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span>
+              <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">amazon</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">amzn</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">twitter</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">twtr</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">google</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">googl</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">sony</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">sne</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">nvidia</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">nvda</span><span style="color:#d88200">&#39;</span><span style="color:#111">}</span>
+
+<span style="color:#00a8c8">for</span> <span style="color:#111">k</span><span style="color:#111">,</span> <span style="color:#111">v</span> <span style="color:#f92672">in</span> <span style="color:#111">tqdm</span><span style="color:#111">(</span><span style="color:#111">stock_pool</span><span style="color:#f92672">.</span><span style="color:#111">items</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">if</span> <span style="color:#111">os</span><span style="color:#f92672">.</span><span style="color:#111">path</span><span style="color:#f92672">.</span><span style="color:#111">isfile</span><span style="color:#111">(</span><span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">data/tweets_{k}_202001.csv</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">{k} finished</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">else</span><span style="color:#111">:</span>  
+        <span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">downloading {k}</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+        <span style="color:#111">get_tweets</span><span style="color:#111">(</span><span style="color:#111">start_date</span><span style="color:#111">,</span> <span style="color:#111">end_date</span><span style="color:#111">,</span> <span style="color:#111">k</span><span style="color:#111">,</span> <span style="color:#111">v</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Although I didn&rsquo;t use them, there&rsquo;re many useful functions of this package including getting certain users&rsquo; list of followers, follows and favorites. From the documentation of the package, I learned that the author also wrote a twint graph visulizers to help users graph the social network of users. These are all interesting learning and practice materials.</p>
+<h4 id="reference">Reference</h4>
+<p><a href="https://github.com/twintproject/twint">https://github.com/twintproject/twint</a></p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        <script src="https://utteranc.es/client.js"
+  repo= "christineeeeee/christineeeeee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+
+</footer>
+
+    </main>
+
+    
+
+  </body>
+
+</html>
