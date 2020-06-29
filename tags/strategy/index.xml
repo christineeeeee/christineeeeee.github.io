@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Strategy on Stop this train</title>
+    <link>https://christineeeeee.com/tags/strategy/</link>
+    <description>Recent content in Strategy on Stop this train</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 17 Mar 2020 22:16:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://christineeeeee.com/tags/strategy/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Spread Trading Strategy</title>
+      <link>https://christineeeeee.com/posts/hw2_christine-li/</link>
+      <pubDate>Tue, 17 Mar 2020 22:16:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/hw2_christine-li/</guid>
+      <description>This is a spreading strategy which is based on M-day returns of two highly related futures. The idea of this strategy is to hedge the risk of buying and holding one specific future with increasing returns by holding the opposite position of another future.
+We define g and j be our trading thresholds in this strategy. Besides, we also have stop-loss threshold s. Our initial capital K is $100MM.
+1. Introduction In this section we give brief intro on the strategy we&amp;rsquo;re about to implement.</description>
+    </item>
+    
+  </channel>
+</rss>

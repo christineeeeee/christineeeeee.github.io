@@ -145,6 +145,17 @@ Allen：我这里的开心比较笼统。如果像你说的违背了规则或者
     </item>
     
     <item>
+      <title>Spread Trading Strategy</title>
+      <link>https://christineeeeee.com/posts/hw2_christine-li/</link>
+      <pubDate>Tue, 17 Mar 2020 22:16:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/hw2_christine-li/</guid>
+      <description>This is a spreading strategy which is based on M-day returns of two highly related futures. The idea of this strategy is to hedge the risk of buying and holding one specific future with increasing returns by holding the opposite position of another future.
+We define g and j be our trading thresholds in this strategy. Besides, we also have stop-loss threshold s. Our initial capital K is $100MM.
+1. Introduction In this section we give brief intro on the strategy we&amp;rsquo;re about to implement.</description>
+    </item>
+    
+    <item>
       <title>封锁</title>
       <link>https://christineeeeee.com/posts/lockdown-diary/</link>
       <pubDate>Mon, 16 Mar 2020 23:10:00 +0000</pubDate>
