@@ -6,10 +6,20 @@
     <description>Recent content in Python on Stop this train</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 04 May 2020 17:16:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 10 May 2020 09:20:58 +0000</lastBuildDate>
     
 	<atom:link href="https://christineeeeee.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Flair - A Pretrained NLP Sentiment Analysis Tool</title>
+      <link>https://christineeeeee.com/posts/nlp_sentiment_tool/</link>
+      <pubDate>Sun, 10 May 2020 09:20:58 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/nlp_sentiment_tool/</guid>
+      <description>NLP(Natural Language Processing) includes sentiment analysis. Trained sentiment analysis includes machine learning, which is of course more accurate. For beginners who just stepped into this field, getting to know some pretrained sentiment analysis tools may also be a good choice. Here, I want to introduce a package I used to analyze sentiment. It&amp;rsquo;s called flair.
+Flair&amp;rsquo;s mechanism is simple. It contains a powerful library which allows users to use and combine different word and document embeddings.</description>
+    </item>
     
     <item>
       <title>Twint - A Twitter Scaping Tool</title>

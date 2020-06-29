@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Christine">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Flair - A Pretrained NLP Sentiment Analysis Tool"/>
+<meta name="twitter:description" content="NLP(Natural Language Processing) includes sentiment analysis. Trained sentiment analysis includes machine learning, which is of course more accurate. For beginners who just stepped into this field, getting to know some pretrained sentiment analysis tools may also be a good choice. Here, I want to introduce a package I used to analyze sentiment. It&rsquo;s called flair.
+Flair&rsquo;s mechanism is simple. It contains a powerful library which allows users to use and combine different word and document embeddings."/>
+
+    <meta property="og:title" content="Flair - A Pretrained NLP Sentiment Analysis Tool" />
+<meta property="og:description" content="NLP(Natural Language Processing) includes sentiment analysis. Trained sentiment analysis includes machine learning, which is of course more accurate. For beginners who just stepped into this field, getting to know some pretrained sentiment analysis tools may also be a good choice. Here, I want to introduce a package I used to analyze sentiment. It&rsquo;s called flair.
+Flair&rsquo;s mechanism is simple. It contains a powerful library which allows users to use and combine different word and document embeddings." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://christineeeeee.com/posts/nlp_sentiment_tool/" />
+<meta property="article:published_time" content="2020-05-10T09:20:58+00:00" />
+<meta property="article:modified_time" content="2020-05-10T09:20:58+00:00" />
+
+
+    
+      <base href="https://christineeeeee.com/posts/nlp_sentiment_tool/">
+    
+    <title>
+  Flair - A Pretrained NLP Sentiment Analysis Tool · Stop this train
+</title>
+
+    
+      <link rel="canonical" href="https://christineeeeee.com/posts/nlp_sentiment_tool/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.c6a6f7e4e5b9eae62968f9dee6cad8903a7a12c11df9305249ee05c53679cafe.css" integrity="sha256-xqb35OW56uYpaPne5srYkDp6EsEd&#43;TBSSe4FxTZ5yv4=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+      <link rel="stylesheet" href="/css/custom.css" />
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.63.1" />
+  </head>
+
+  
+  
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Stop this train
+    </a>
+    
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/pieces/">Pieces</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Flair - A Pretrained NLP Sentiment Analysis Tool</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-05-10T09:20:58Z'>
+                May 10, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="/tags/python/">Python</a>
+      <span class="separator">•</span>
+    <a href="/tags/package/">Package</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <p>NLP(Natural Language Processing) includes sentiment analysis. Trained sentiment analysis includes machine learning, which is of course more accurate. For beginners who just stepped into this field, getting to know some pretrained sentiment analysis tools may also be a good choice. Here, I want to introduce a package I used to analyze sentiment. It&rsquo;s called <strong>flair</strong>.</p>
+<p>Flair&rsquo;s mechanism is simple. It contains a powerful library which allows users to use and combine different word and document embeddings. Based on the corpus, it could analyze and tell the attitudes of the speakers. Comparing with other NLP packages, flair&rsquo;s sentiment classifier is based on a character-level LSTM neural network which takes sequences of letters and words into account when predicting. It&rsquo;s based on a corpus but in the meantime, it could also predict a sentiment for OOV(Out of Vocab) words including typos.</p>
+<h4 id="installing-and-importing-package">Installing and Importing Package</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#960050;background-color:#1e0010">!</span><span style="color:#111">pip3</span> <span style="color:#111">install</span> <span style="color:#111">flair</span>
+<span style="color:#f92672">import</span> <span style="color:#111">flair</span>
+<span style="color:#111">flair_sentiment</span> <span style="color:#f92672">=</span> <span style="color:#111">flair</span><span style="color:#f92672">.</span><span style="color:#111">models</span><span style="color:#f92672">.</span><span style="color:#111">TextClassifier</span><span style="color:#f92672">.</span><span style="color:#111">load</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">en-sentiment</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="sentiment-scoring">Sentiment Scoring</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">senti_score</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#111">s</span> <span style="color:#f92672">=</span> <span style="color:#111">flair</span><span style="color:#f92672">.</span><span style="color:#111">data</span><span style="color:#f92672">.</span><span style="color:#111">Sentence</span><span style="color:#111">(</span><span style="color:#111">n</span><span style="color:#111">)</span>
+    <span style="color:#111">flair_sentiment</span><span style="color:#f92672">.</span><span style="color:#111">predict</span><span style="color:#111">(</span><span style="color:#111">s</span><span style="color:#111">)</span>
+    <span style="color:#111">total_sentiment</span> <span style="color:#f92672">=</span> <span style="color:#111">s</span><span style="color:#f92672">.</span><span style="color:#111">labels</span><span style="color:#111">[</span><span style="color:#ae81ff">0</span><span style="color:#111">]</span>
+    <span style="color:#00a8c8">assert</span> <span style="color:#111">total_sentiment</span><span style="color:#f92672">.</span><span style="color:#111">value</span> <span style="color:#f92672">in</span> <span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">POSITIVE</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">NEGATIVE</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+    <span style="color:#111">sign</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#00a8c8">if</span> <span style="color:#111">total_sentiment</span><span style="color:#f92672">.</span><span style="color:#111">value</span> <span style="color:#f92672">==</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">POSITIVE</span><span style="color:#d88200">&#39;</span> <span style="color:#00a8c8">else</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+    <span style="color:#111">score</span> <span style="color:#f92672">=</span> <span style="color:#111">total_sentiment</span><span style="color:#f92672">.</span><span style="color:#111">score</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#111">sign</span> <span style="color:#f92672">*</span> <span style="color:#111">score</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Here, I created a function to compute the sentiment score of each tweet. The closer the number&rsquo;s absolute value to 1, the more certain the model is and the more extreme the attitudes of the users are. When the sentiment of a sentence is positive, the score is positive; when the sentiment of a sentence is negative, the score is negative. Amazingly, since the sentiment classifier could tell the intensifiers such as &lsquo;very&rsquo;, the score will vary when intensifiers are in the game.</p>
+<h4 id="examples">Examples</h4>
+<p>I used several sentences to illustrate the package&rsquo;s ability to tell the differences between sentences with different attitudes and also intensifiers.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">s</span> <span style="color:#f92672">=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">Tesla is a great company</span><span style="color:#d88200">&#39;</span>
+<span style="color:#111">senti_score</span><span style="color:#111">(</span><span style="color:#111">s</span><span style="color:#111">)</span>
+
+<span style="color:#111">s</span> <span style="color:#f92672">=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">Tesla is a good company</span><span style="color:#d88200">&#39;</span>
+<span style="color:#111">senti_score</span><span style="color:#111">(</span><span style="color:#111">s</span><span style="color:#111">)</span>
+
+<span style="color:#111">s</span> <span style="color:#f92672">=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">Tesla is just a company</span><span style="color:#d88200">&#39;</span>
+<span style="color:#111">senti_score</span><span style="color:#111">(</span><span style="color:#111">s</span><span style="color:#111">)</span>
+
+<span style="color:#111">s</span> <span style="color:#f92672">=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">Tesla is a bad company</span><span style="color:#d88200">&#39;</span>
+<span style="color:#111">senti_score</span><span style="color:#111">(</span><span style="color:#111">s</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>For the upon examples, the four sentences&rsquo; results are results 0.9978, 0.9961, -0.8989 and -0.9998.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        <script src="https://utteranc.es/client.js"
+  repo= "christineeeeee/christineeeeee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+
+</footer>
+
+    </main>
+
+    
+
+  </body>
+
+</html>
