@@ -31,11 +31,23 @@ Flair&amp;rsquo;s mechanism is simple. It contains a powerful library which allo
     </item>
     
     <item>
+      <title>Return predictions From Trade Flow</title>
+      <link>https://christineeeeee.com/posts/hw3_christine-li/</link>
+      <pubDate>Sat, 25 Apr 2020 13:24:30 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/hw3_christine-li/</guid>
+      <description>This is a strategy which is based on tick level analysis. The idea is that we use trade flow as our signals of the market to generate profit opportunities.
+We define j as our trading threshold. Also, we need to decide proper $\tau$ as the backward trade interval and T as the forward trade interval.
+1. Introduction Breif intro of the strategy.
+Order Book and Trade Marking In the order book, there&amp;rsquo;re two types of trades: bid and ask.</description>
+    </item>
+    
+    <item>
       <title>Spread Trading Strategy</title>
-      <link>https://christineeeeee.com/posts/hw2_christine-li/</link>
+      <link>https://christineeeeee.com/posts/spread_trading/</link>
       <pubDate>Tue, 17 Mar 2020 22:16:00 +0000</pubDate>
       
-      <guid>https://christineeeeee.com/posts/hw2_christine-li/</guid>
+      <guid>https://christineeeeee.com/posts/spread_trading/</guid>
       <description>This is a spreading strategy which is based on M-day returns of two highly related futures. The idea of this strategy is to hedge the risk of buying and holding one specific future with increasing returns by holding the opposite position of another future.
 We define g and j be our trading thresholds in this strategy. Besides, we also have stop-loss threshold s. Our initial capital K is $100MM.
 1. Introduction In this section we give brief intro on the strategy we&amp;rsquo;re about to implement.</description>
