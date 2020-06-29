@@ -6,19 +6,10 @@
     <description>Recent content in Python on Stop this train</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 15 May 2020 12:23:45 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 10 May 2020 09:20:58 +0000</lastBuildDate>
     
 	<atom:link href="https://christineeeeee.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Lemmatization</title>
-      <link>https://christineeeeee.com/posts/lemmatization/</link>
-      <pubDate>Fri, 15 May 2020 12:23:45 +0000</pubDate>
-      
-      <guid>https://christineeeeee.com/posts/lemmatization/</guid>
-      <description>In NLP, lemmatization of words is a typical step.</description>
-    </item>
     
     <item>
       <title>Flair - A Pretrained NLP Sentiment Analysis Tool</title>
