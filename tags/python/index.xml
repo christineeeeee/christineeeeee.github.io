@@ -32,10 +32,10 @@ Flair&amp;rsquo;s mechanism is simple. It contains a powerful library which allo
     
     <item>
       <title>Return predictions From Trade Flow</title>
-      <link>https://christineeeeee.com/posts/hw3_christine-li/</link>
+      <link>https://christineeeeee.com/posts/trade_flow/</link>
       <pubDate>Sat, 25 Apr 2020 13:24:30 +0000</pubDate>
       
-      <guid>https://christineeeeee.com/posts/hw3_christine-li/</guid>
+      <guid>https://christineeeeee.com/posts/trade_flow/</guid>
       <description>This is a strategy which is based on tick level analysis. The idea is that we use trade flow as our signals of the market to generate profit opportunities.
 We define j as our trading threshold. Also, we need to decide proper $\tau$ as the backward trade interval and T as the forward trade interval.
 1. Introduction Breif intro of the strategy.
