@@ -6,10 +6,19 @@
     <description>Recent content in Strategy on Stop this train</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 25 Apr 2020 13:24:30 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 05 Jun 2020 18:08:00 +0000</lastBuildDate>
     
 	<atom:link href="https://christineeeeee.com/tags/strategy/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Twitter Sentiment Strategy</title>
+      <link>https://christineeeeee.com/posts/twitter_sentiment/</link>
+      <pubDate>Fri, 05 Jun 2020 18:08:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/twitter_sentiment/</guid>
+      <description>1. Introduction This is an exploratory research trying to implement a sentiment analysis mechanism of ten of the most discussed techonology stocks in the market nowadays. By collecting people&amp;rsquo;s discussions about the stocks on twitter, we used NLP (Natural language processing) to analyze people&amp;rsquo;s reactions and guesses of the market and got a score which indicates people&amp;rsquo;s positive or negative attitudes towards those certain stocks. Based on the daily scores we get, we adjusted our positions automatically.</description>
+    </item>
     
     <item>
       <title>Return predictions From Trade Flow</title>

@@ -3,32 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://christineeeeee.com/posts/</loc>
+    <lastmod>2020-06-05T18:08:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/tags/python/</loc>
+    <lastmod>2020-06-05T18:08:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/</loc>
+    <lastmod>2020-06-05T18:08:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/tags/strategy/</loc>
+    <lastmod>2020-06-05T18:08:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/tags/</loc>
+    <lastmod>2020-06-05T18:08:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/posts/twitter_sentiment/</loc>
+    <lastmod>2020-06-05T18:08:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://christineeeeee.com/posts/nlp_sentiment_tool/</loc>
     <lastmod>2020-05-10T09:20:58+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://christineeeeee.com/tags/package/</loc>
-    <lastmod>2020-05-10T09:20:58+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://christineeeeee.com/posts/</loc>
-    <lastmod>2020-05-10T09:20:58+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://christineeeeee.com/tags/python/</loc>
-    <lastmod>2020-05-10T09:20:58+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://christineeeeee.com/</loc>
-    <lastmod>2020-05-10T09:20:58+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://christineeeeee.com/tags/</loc>
     <lastmod>2020-05-10T09:20:58+00:00</lastmod>
   </url>
   
@@ -49,11 +59,6 @@
   
   <url>
     <loc>https://christineeeeee.com/posts/trade_flow/</loc>
-    <lastmod>2020-04-25T13:24:30+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://christineeeeee.com/tags/strategy/</loc>
     <lastmod>2020-04-25T13:24:30+00:00</lastmod>
   </url>
   
