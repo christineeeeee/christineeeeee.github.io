@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Christine">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Comparison Between Exponential Weighted and Rolling Regression"/>
+<meta name="twitter:description" content="This research discusses two normal prediction ways people are using: exponential weighted regression and rolling regression. By comparing the prediction errors of both ways, we generally get the idea of the difference between these two regressions.
+1. Introduction Comparison between two ways of regression  Exponential Weighted Moving Regression: considering all the previous data to do the regression, however, following the intuition that the nearer data have more effects on the future data, the weight of data are different regarding time."/>
+
+    <meta property="og:title" content="Comparison Between Exponential Weighted and Rolling Regression" />
+<meta property="og:description" content="This research discusses two normal prediction ways people are using: exponential weighted regression and rolling regression. By comparing the prediction errors of both ways, we generally get the idea of the difference between these two regressions.
+1. Introduction Comparison between two ways of regression  Exponential Weighted Moving Regression: considering all the previous data to do the regression, however, following the intuition that the nearer data have more effects on the future data, the weight of data are different regarding time." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://christineeeeee.com/posts/regression_comparison/" />
+<meta property="article:published_time" content="2020-05-15T21:16:00+00:00" />
+<meta property="article:modified_time" content="2020-05-15T21:16:00+00:00" />
+
+
+    
+      <base href="https://christineeeeee.com/posts/regression_comparison/">
+    
+    <title>
+  Comparison Between Exponential Weighted and Rolling Regression · Stop this train
+</title>
+
+    
+      <link rel="canonical" href="https://christineeeeee.com/posts/regression_comparison/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.c6a6f7e4e5b9eae62968f9dee6cad8903a7a12c11df9305249ee05c53679cafe.css" integrity="sha256-xqb35OW56uYpaPne5srYkDp6EsEd&#43;TBSSe4FxTZ5yv4=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+      <link rel="stylesheet" href="/css/custom.css" />
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.63.1" />
+  </head>
+
+  
+  
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Stop this train
+    </a>
+    
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/pieces/">Pieces</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Comparison Between Exponential Weighted and Rolling Regression</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-05-15T21:16:00Z'>
+                May 15, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              14-minute read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="/tags/python/">Python</a>
+      <span class="separator">•</span>
+    <a href="/tags/strategy/">Strategy</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <p>This research discusses two normal prediction ways people are using: exponential weighted regression and rolling regression. By comparing the prediction errors of both ways, we generally get the idea of the difference between these two regressions.</p>
+<h2 id="1-introduction">1. Introduction</h2>
+<h3 id="comparison-between-two-ways-of-regression">Comparison between two ways of regression</h3>
+<ul>
+<li><strong>Exponential Weighted Moving Regression</strong>: considering all the previous data to do the regression, however, following the intuition that the nearer data have more effects on the future data, the weight of data are different regarding time. Time decay applies here.</li>
+<li><strong>Rolling Regression</strong>: for each date, we determine a moving boxcar window so that our prediction is based on a certain range of past data. The disadvantage of this method is that it could not smoothly decay old data and sometimes when an outlier is added or discarded, the prediction will change a lot.</li>
+</ul>
+<h3 id="benchmark">Benchmark</h3>
+<p>We set the out-of-sample regression coefficient here as our benchmark to see which way of regression could give us a better prediction (lower prediction errors).</p>
+<p>Another thing worth mentioning is that we&rsquo;re using SPY(S&amp;P 500 ETF Trust) to do the regression and prediction.</p>
+<h2 id="2-data-preparation">2. Data Preparation</h2>
+<h3 id="introduction-of-the-packages-in-the-research">Introduction of the packages in the research</h3>
+<p>We&rsquo;re using several really important python pac</p>
+<ul>
+<li><strong>Pandas</strong>: dataframe manipulation</li>
+<li><strong>NumPy</strong>: support for mathematical functions and computation of arrays and matrics</li>
+<li><strong>Quandl</strong>: source of our financial data</li>
+<li><strong>Statsmodel</strong>: statistical analysis</li>
+<li><strong>Matplotlib</strong>: plot tools</li>
+<li><strong>tqdm</strong>: progress bar</li>
+<li><strong>os</strong>: interact with the operating system</li>
+<li><strong>PandasRollingOLS</strong>: package for computing rolling regression and obtain the coefficients</li>
+</ul>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> <span style="color:#111">numpy</span> <span style="color:#f92672">as</span> <span style="color:#111">np</span>
+<span style="color:#f92672">import</span> <span style="color:#111">pandas</span> <span style="color:#f92672">as</span> <span style="color:#111">pd</span>
+<span style="color:#f92672">import</span> <span style="color:#111">quandl</span>
+<span style="color:#f92672">import</span> <span style="color:#111">warnings</span>
+<span style="color:#f92672">from</span> <span style="color:#111">tqdm.auto</span> <span style="color:#f92672">import</span> <span style="color:#111">tqdm</span>
+<span style="color:#f92672">import</span> <span style="color:#111">matplotlib.pyplot</span> <span style="color:#f92672">as</span> <span style="color:#111">plt</span>
+<span style="color:#f92672">import</span> <span style="color:#111">pickle</span>
+<span style="color:#f92672">import</span> <span style="color:#111">os</span>
+<span style="color:#f92672">from</span> <span style="color:#111">pyfinance.ols</span> <span style="color:#f92672">import</span> <span style="color:#111">PandasRollingOLS</span>
+<span style="color:#f92672">import</span> <span style="color:#111">statsmodels.formula.api</span> <span style="color:#f92672">as</span> <span style="color:#111">smf</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">quandl</span><span style="color:#f92672">.</span><span style="color:#111">ApiConfig</span><span style="color:#f92672">.</span><span style="color:#111">api_key</span> <span style="color:#f92672">=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">yFs2mPKxvfCC26C4vG3K</span><span style="color:#d88200">&#39;</span>
+<span style="color:#111">warnings</span><span style="color:#f92672">.</span><span style="color:#111">filterwarnings</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#34;</span><span style="color:#d88200">ignore</span><span style="color:#d88200">&#34;</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">rcParams</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">figure.figsize</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#ae81ff">10</span><span style="color:#111">,</span> <span style="color:#ae81ff">5</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="obtaining-data">Obtaining data</h3>
+<p>Get the list of tickers that Quandl has and filter the tickers that could satisfy our conditions: tickers which have valid records from 2016-01-04 to 2019-12-31.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">ticker</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">read_csv</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">../HW5/ticker_list.csv</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+<span style="color:#111">ticker</span>
+<span style="color:#111">ticker_list</span> <span style="color:#f92672">=</span> <span style="color:#111">ticker</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">Ticker</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+<span style="color:#111">ticker_list</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>0          A
+1         AA
+2       AAAU
+3       AACG
+4       AADR
+        ... 
+8627     ZUO
+8628     ZVO
+8629    ZYME
+8630    ZYNE
+8631    ZYXI
+Name: Ticker, Length: 8632, dtype: object
+</code></pre>
+<p>For the tickers we selected, compute the daily return using daily Adjusted Closing Price.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">start_date</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">to_datetime</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2016-01-04</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+<span style="color:#111">end_date</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">to_datetime</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2019-12-31</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+
+<span style="color:#00a8c8">def</span> <span style="color:#75af00">get_eod</span><span style="color:#111">(</span><span style="color:#111">tic</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#111">adj_close</span> <span style="color:#f92672">=</span> <span style="color:#111">quandl</span><span style="color:#f92672">.</span><span style="color:#111">get</span><span style="color:#111">(</span>
+        <span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">EOD/{tic}</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span>
+        <span style="color:#111">start_date</span><span style="color:#f92672">=</span><span style="color:#111">start_date</span> <span style="color:#f92672">-</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">offsets</span><span style="color:#f92672">.</span><span style="color:#111">BDay</span><span style="color:#111">(</span><span style="color:#ae81ff">5</span><span style="color:#111">)</span><span style="color:#111">,</span>
+        <span style="color:#111">end_date</span><span style="color:#f92672">=</span><span style="color:#111">end_date</span> <span style="color:#f92672">+</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">offsets</span><span style="color:#f92672">.</span><span style="color:#111">BDay</span><span style="color:#111">(</span><span style="color:#ae81ff">5</span><span style="color:#111">)</span><span style="color:#111">,</span>
+        <span style="color:#111">column_index</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">11</span><span style="color:#d88200">&#39;</span>
+    <span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">Adj_Close</span>
+    <span style="color:#00a8c8">assert</span> <span style="color:#111">adj_close</span><span style="color:#f92672">.</span><span style="color:#111">index</span><span style="color:#111">[</span><span style="color:#ae81ff">0</span><span style="color:#111">]</span> <span style="color:#f92672">&lt;</span> <span style="color:#111">start_date</span><span style="color:#111">,</span> <span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">start date too late: {adj_close.index[0]}</span><span style="color:#d88200">&#39;</span>
+    <span style="color:#00a8c8">assert</span> <span style="color:#111">adj_close</span><span style="color:#f92672">.</span><span style="color:#111">index</span><span style="color:#111">[</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#111">]</span> <span style="color:#f92672">&gt;</span> <span style="color:#111">end_date</span><span style="color:#111">,</span> <span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">end date too early: {adj_close.index[-1]}</span><span style="color:#d88200">&#39;</span>
+    <span style="color:#111">daily_return</span> <span style="color:#f92672">=</span> <span style="color:#111">adj_close</span><span style="color:#f92672">.</span><span style="color:#111">pct_change</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">iloc</span><span style="color:#111">[</span><span style="color:#ae81ff">1</span><span style="color:#111">:</span><span style="color:#111">]</span>
+    <span style="color:#111">daily_return</span><span style="color:#f92672">.</span><span style="color:#111">name</span> <span style="color:#f92672">=</span> <span style="color:#111">tic</span>
+    <span style="color:#111">ret</span> <span style="color:#f92672">=</span> <span style="color:#111">daily_return</span><span style="color:#111">[</span><span style="color:#111">start_date</span><span style="color:#111">:</span><span style="color:#111">end_date</span><span style="color:#111">]</span>
+    <span style="color:#00a8c8">assert</span> <span style="color:#111">len</span><span style="color:#111">(</span><span style="color:#111">ret</span><span style="color:#111">)</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1006</span>  <span style="color:#75715e"># length of SPY returns</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#111">ret</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Also, add SPY into the EOD list.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">if</span> <span style="color:#111">os</span><span style="color:#f92672">.</span><span style="color:#111">path</span><span style="color:#f92672">.</span><span style="color:#111">isfile</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">EOD.pkl</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">with</span> <span style="color:#111">open</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">EOD.pkl</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">rb</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span> <span style="color:#00a8c8">as</span> <span style="color:#111">f</span><span style="color:#111">:</span>
+        <span style="color:#111">EOD</span> <span style="color:#f92672">=</span> <span style="color:#111">pickle</span><span style="color:#f92672">.</span><span style="color:#111">load</span><span style="color:#111">(</span><span style="color:#111">f</span><span style="color:#111">)</span>
+<span style="color:#00a8c8">else</span><span style="color:#111">:</span>
+    <span style="color:#111">EOD</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+    <span style="color:#00a8c8">while</span> <span style="color:#111">len</span><span style="color:#111">(</span><span style="color:#111">EOD</span><span style="color:#111">)</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">200</span><span style="color:#111">:</span>
+        <span style="color:#111">tic</span> <span style="color:#f92672">=</span> <span style="color:#111">np</span><span style="color:#f92672">.</span><span style="color:#111">random</span><span style="color:#f92672">.</span><span style="color:#111">choice</span><span style="color:#111">(</span><span style="color:#111">ticker_list</span><span style="color:#111">,</span> <span style="color:#111">size</span><span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#111">)</span><span style="color:#111">[</span><span style="color:#ae81ff">0</span><span style="color:#111">]</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">tic</span> <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> <span style="color:#111">EOD</span><span style="color:#f92672">.</span><span style="color:#111">keys</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">:</span>
+            <span style="color:#00a8c8">try</span><span style="color:#111">:</span>
+                <span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">get_eod</span><span style="color:#111">(</span><span style="color:#111">tic</span><span style="color:#111">)</span>
+                <span style="color:#111">msg</span> <span style="color:#f92672">=</span> <span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">Current number of tickers: {len(EOD)}</span><span style="color:#d88200">&#39;</span>
+                <span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">{msg:&lt;100}</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">end</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#8045ff">\r</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+            <span style="color:#00a8c8">except</span> <span style="color:#75af00">Exception</span> <span style="color:#00a8c8">as</span> <span style="color:#111">e</span><span style="color:#111">:</span>
+                <span style="color:#111">msg</span> <span style="color:#f92672">=</span> <span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">Skip {tic}: {e}</span><span style="color:#d88200">&#39;</span>
+                <span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">{msg:&lt;100}</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">end</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#8045ff">\r</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+                <span style="color:#00a8c8">continue</span>
+    
+    <span style="color:#00a8c8">with</span> <span style="color:#111">open</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">EOD.pkl</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">wb</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span> <span style="color:#00a8c8">as</span> <span style="color:#111">f</span><span style="color:#111">:</span>
+        <span style="color:#111">pickle</span><span style="color:#f92672">.</span><span style="color:#111">dump</span><span style="color:#111">(</span><span style="color:#111">EOD</span><span style="color:#111">,</span> <span style="color:#111">f</span><span style="color:#111">)</span>
+
+<span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">get_eod</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>Current number of tickers: 201                                                                      
+</code></pre>
+<h2 id="3-computation-of-regressions">3. Computation of regressions</h2>
+<h3 id="exponential-weighted-regression">Exponential weighted regression</h3>
+<p>For the exponential weighted regression, we set $\frac{1}{\lambda}$ to be the characteristic time of our averaging, so $\alpha = 1 - e^{-\lambda \delta t}$ is the smoothing factor. Since our data is daily, $\delta t$ = 1.</p>
+<p>By using the relationship between those variables, we set two functions in order to calculate our $\alpha$ and window given $\lambda$.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">lambda_to_alpha</span><span style="color:#111">(</span><span style="color:#111">lam</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> <span style="color:#111">np</span><span style="color:#f92672">.</span><span style="color:#111">exp</span><span style="color:#111">(</span><span style="color:#f92672">-</span><span style="color:#111">lam</span><span style="color:#111">)</span>
+
+<span style="color:#00a8c8">def</span> <span style="color:#75af00">lambda_to_window</span><span style="color:#111">(</span><span style="color:#111">lam</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#111">round</span><span style="color:#111">(</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> <span style="color:#111">lam</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Just for example, we choose $\lambda$ = 0.01.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">lam</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.01</span>
+<span style="color:#111">alpha</span> <span style="color:#f92672">=</span> <span style="color:#111">lambda_to_alpha</span><span style="color:#111">(</span><span style="color:#111">lam</span><span style="color:#111">)</span>
+<span style="color:#111">window</span> <span style="color:#f92672">=</span> <span style="color:#111">lambda_to_window</span><span style="color:#111">(</span><span style="color:#111">lam</span><span style="color:#111">)</span>
+<span style="color:#00a8c8">assert</span> <span style="color:#111">window</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">300</span>
+<span style="color:#111">lam</span><span style="color:#111">,</span> <span style="color:#111">alpha</span><span style="color:#111">,</span> <span style="color:#111">window</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>(0.01, 0.009950166250831893, 200)
+</code></pre>
+<p>Compute exponential-weighted coefficient.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">EW_COEF</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+<span style="color:#111">SPY_VAR</span> <span style="color:#f92672">=</span> <span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">ewm</span><span style="color:#111">(</span><span style="color:#111">alpha</span><span style="color:#f92672">=</span><span style="color:#111">alpha</span><span style="color:#111">,</span> <span style="color:#111">adjust</span><span style="color:#f92672">=</span><span style="color:#111">True</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">var</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">[</span><span style="color:#ae81ff">1</span><span style="color:#111">:</span><span style="color:#111">]</span>
+
+<span style="color:#00a8c8">for</span> <span style="color:#111">tic</span> <span style="color:#f92672">in</span> <span style="color:#111">tqdm</span><span style="color:#111">(</span><span style="color:#111">EOD</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">if</span> <span style="color:#111">tic</span> <span style="color:#f92672">!=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span>
+        <span style="color:#111">temp</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">concat</span><span style="color:#111">(</span><span style="color:#111">[</span><span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">axis</span><span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#111">)</span>
+        <span style="color:#111">temp_cov</span> <span style="color:#f92672">=</span> <span style="color:#111">temp</span><span style="color:#f92672">.</span><span style="color:#111">ewm</span><span style="color:#111">(</span><span style="color:#111">alpha</span><span style="color:#f92672">=</span><span style="color:#111">alpha</span><span style="color:#111">,</span> <span style="color:#111">adjust</span><span style="color:#f92672">=</span><span style="color:#111">True</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">cov</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">xs</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">level</span><span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#111">)</span><span style="color:#111">[</span><span style="color:#ae81ff">1</span><span style="color:#111">:</span><span style="color:#111">]</span>
+        <span style="color:#111">temp_coef</span> <span style="color:#f92672">=</span> <span style="color:#111">temp_cov</span> <span style="color:#f92672">/</span> <span style="color:#111">SPY_VAR</span>
+        <span style="color:#111">EW_COEF</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">temp_coef</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>HBox(children=(FloatProgress(value=0.0, max=202.0), HTML(value='')))
+</code></pre>
+<h3 id="in-sample-rolling-regression">In-Sample Rolling Regression</h3>
+<p>Given the lambda we have, window size = 200 here.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">time_list</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2018-06-29</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2018-12-31</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2019-06-28</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2019-11-29</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+<span style="color:#111">time_list</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">to_datetime</span><span style="color:#111">(</span><span style="color:#111">t</span><span style="color:#111">)</span> <span style="color:#00a8c8">for</span> <span style="color:#111">t</span> <span style="color:#f92672">in</span> <span style="color:#111">time_list</span><span style="color:#111">]</span>
+
+<span style="color:#111">ew_beta</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+<span style="color:#00a8c8">for</span> <span style="color:#111">tic</span> <span style="color:#f92672">in</span> <span style="color:#111">EW_COEF</span><span style="color:#111">:</span>
+    <span style="color:#111">temp</span> <span style="color:#f92672">=</span> <span style="color:#111">EW_COEF</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">loc</span><span style="color:#111">[</span><span style="color:#111">time_list</span><span style="color:#111">]</span>
+    <span style="color:#111">ew_beta</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">temp</span>
+
+<span style="color:#111">rolling_coef_b</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+<span style="color:#00a8c8">for</span> <span style="color:#111">tic</span> <span style="color:#f92672">in</span> <span style="color:#111">EOD</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">if</span> <span style="color:#111">tic</span> <span style="color:#f92672">!=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span>
+        <span style="color:#111">model</span> <span style="color:#f92672">=</span> <span style="color:#111">PandasRollingOLS</span><span style="color:#111">(</span><span style="color:#111">y</span><span style="color:#f92672">=</span><span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">x</span><span style="color:#f92672">=</span><span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">window</span><span style="color:#f92672">=</span><span style="color:#111">window</span><span style="color:#111">)</span>
+        <span style="color:#111">beta</span> <span style="color:#f92672">=</span> <span style="color:#111">model</span><span style="color:#f92672">.</span><span style="color:#111">beta</span><span style="color:#f92672">.</span><span style="color:#111">loc</span><span style="color:#111">[</span><span style="color:#111">time_list</span><span style="color:#111">]</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">feature1</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+        <span style="color:#111">beta</span><span style="color:#f92672">.</span><span style="color:#111">name</span> <span style="color:#f92672">=</span> <span style="color:#111">tic</span>
+        <span style="color:#111">rolling_coef_b</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">beta</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="out-of-sample-regression">Out-of-sample regression</h3>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># According to the time list, set the future 20-day time list </span>
+<span style="color:#111">time_list_2</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#111">t</span> <span style="color:#f92672">+</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">offsets</span><span style="color:#f92672">.</span><span style="color:#111">BDay</span><span style="color:#111">(</span><span style="color:#ae81ff">20</span><span style="color:#111">)</span> <span style="color:#00a8c8">for</span> <span style="color:#111">t</span> <span style="color:#f92672">in</span> <span style="color:#111">time_list</span><span style="color:#111">]</span>
+<span style="color:#111">time_list_2</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>[Timestamp('2018-07-27 00:00:00'),
+ Timestamp('2019-01-28 00:00:00'),
+ Timestamp('2019-07-26 00:00:00'),
+ Timestamp('2019-12-27 00:00:00')]
+</code></pre>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Compute rolling regression for the future 20 days (which is our benchmark here)</span>
+<span style="color:#111">rolling_coef_c</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+<span style="color:#00a8c8">for</span> <span style="color:#111">tic</span> <span style="color:#f92672">in</span> <span style="color:#111">EOD</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">if</span> <span style="color:#111">tic</span> <span style="color:#f92672">!=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span>
+        <span style="color:#111">model</span> <span style="color:#f92672">=</span> <span style="color:#111">PandasRollingOLS</span><span style="color:#111">(</span><span style="color:#111">y</span><span style="color:#f92672">=</span><span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">x</span><span style="color:#f92672">=</span><span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">window</span><span style="color:#f92672">=</span><span style="color:#ae81ff">20</span><span style="color:#111">)</span>
+        <span style="color:#111">beta</span> <span style="color:#f92672">=</span> <span style="color:#111">model</span><span style="color:#f92672">.</span><span style="color:#111">beta</span><span style="color:#f92672">.</span><span style="color:#111">loc</span><span style="color:#111">[</span><span style="color:#111">time_list</span><span style="color:#111">]</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">feature1</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+        <span style="color:#111">beta</span><span style="color:#f92672">.</span><span style="color:#111">name</span> <span style="color:#f92672">=</span> <span style="color:#111">tic</span>
+        <span style="color:#111">rolling_coef_c</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">beta</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="4-statistical-comparison">4. Statistical Comparison</h2>
+<p>To compare the performance of the above two regressions, I used several ways.</p>
+<h3 id="comparison-of-mae-and-mse-of-the-prediction">Comparison of MAE and MSE of the prediction</h3>
+<ul>
+<li>MAE: MAE measures the average magnitude of the errors in a set of predictions</li>
+<li>MSE: MSE measures the average magnitude of the error</li>
+</ul>
+<p>For both indexes, the smaller, the more accurate the prediction is.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">y</span> <span style="color:#f92672">=</span> <span style="color:#111">np</span><span style="color:#f92672">.</span><span style="color:#111">array</span><span style="color:#111">(</span><span style="color:#111">list</span><span style="color:#111">(</span><span style="color:#111">map</span><span style="color:#111">(</span><span style="color:#111">list</span><span style="color:#111">,</span> <span style="color:#111">rolling_coef_c</span><span style="color:#f92672">.</span><span style="color:#111">values</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">)</span>
+<span style="color:#111">y_pred_ew</span> <span style="color:#f92672">=</span> <span style="color:#111">np</span><span style="color:#f92672">.</span><span style="color:#111">array</span><span style="color:#111">(</span><span style="color:#111">list</span><span style="color:#111">(</span><span style="color:#111">map</span><span style="color:#111">(</span><span style="color:#111">list</span><span style="color:#111">,</span> <span style="color:#111">ew_beta</span><span style="color:#f92672">.</span><span style="color:#111">values</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">)</span>
+<span style="color:#111">y_pred_wd</span> <span style="color:#f92672">=</span> <span style="color:#111">np</span><span style="color:#f92672">.</span><span style="color:#111">array</span><span style="color:#111">(</span><span style="color:#111">list</span><span style="color:#111">(</span><span style="color:#111">map</span><span style="color:#111">(</span><span style="color:#111">list</span><span style="color:#111">,</span> <span style="color:#111">rolling_coef_b</span><span style="color:#f92672">.</span><span style="color:#111">values</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">mae_ew</span> <span style="color:#f92672">=</span> <span style="color:#111">abs</span><span style="color:#111">(</span><span style="color:#111">y</span> <span style="color:#f92672">-</span> <span style="color:#111">y_pred_ew</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">mean</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">mae_wd</span> <span style="color:#f92672">=</span> <span style="color:#111">abs</span><span style="color:#111">(</span><span style="color:#111">y</span> <span style="color:#f92672">-</span> <span style="color:#111">y_pred_wd</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">mean</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">mse_ew</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">(</span><span style="color:#111">y</span> <span style="color:#f92672">-</span> <span style="color:#111">y_pred_ew</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">mean</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">mse_wd</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">(</span><span style="color:#111">y</span> <span style="color:#f92672">-</span> <span style="color:#111">y_pred_wd</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">mean</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">For exponential-weighted regression, the prediction</span><span style="color:#8045ff">\&#39;</span><span style="color:#d88200">s MAE={:.4f}, MSE={:.4f};</span><span style="color:#8045ff">\n</span><span style="color:#d88200">&#39;</span>
+      <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">For rolling regression, the prediction</span><span style="color:#8045ff">\&#39;</span><span style="color:#d88200">s MAE={:.4f}, MSE={:.4f}</span><span style="color:#d88200">&#39;</span><span style="color:#f92672">.</span><span style="color:#111">format</span><span style="color:#111">(</span><span style="color:#111">mae_ew</span><span style="color:#111">,</span> <span style="color:#111">mse_ew</span><span style="color:#111">,</span> <span style="color:#111">mae_wd</span><span style="color:#111">,</span> <span style="color:#111">mse_wd</span><span style="color:#111">)</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>For exponential-weighted regression, the prediction's MAE=0.5353, MSE=1.1382;
+For rolling regression, the prediction's MAE=0.5587, MSE=1.1956
+</code></pre>
+<p>From the result, we could see that the exponential-wegithed regression&rsquo;s MAE and MSE are both smaller than that of rolling regression, which means the in this case, the exponential weighted regression is preferred.</p>
+<h3 id="relationship-between-betafrom-exponential-regression-and-bfrom-rolling-regression">Relationship between beta(from exponential regression) and b(from rolling regression)</h3>
+<p>Drawing the scatter plot of the two regressions&rsquo; prediction erros of all the tickers by the two different regression, I tried to see if there&rsquo;s any relationships between those two predictions&rsquo; errors.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">df_coef</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">{</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">c</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">y</span><span style="color:#f92672">.</span><span style="color:#111">flatten</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">,</span>
+              <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">y_pred_ew</span><span style="color:#f92672">.</span><span style="color:#111">flatten</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">,</span>
+              <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">b</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">y_pred_wd</span><span style="color:#f92672">.</span><span style="color:#111">flatten</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">}</span><span style="color:#111">)</span>
+<span style="color:#111">df_coef</span>
+</code></pre></td></tr></table>
+</div>
+</div><table>
+<thead>
+<tr>
+<th></th>
+<th>c</th>
+<th>beta</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1.314779</td>
+<td>1.236790</td>
+<td>1.174681</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.830983</td>
+<td>1.002387</td>
+<td>1.058264</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1.371328</td>
+<td>1.229957</td>
+<td>1.121128</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1.062639</td>
+<td>1.307811</td>
+<td>1.474886</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.797373</td>
+<td>0.820776</td>
+<td>0.855415</td>
+</tr>
+<tr>
+<td>&hellip;</td>
+<td>&hellip;</td>
+<td>&hellip;</td>
+<td>&hellip;</td>
+</tr>
+<tr>
+<td>799</td>
+<td>0.817802</td>
+<td>0.079735</td>
+<td>0.152021</td>
+</tr>
+<tr>
+<td>800</td>
+<td>0.429854</td>
+<td>0.794702</td>
+<td>0.769725</td>
+</tr>
+<tr>
+<td>801</td>
+<td>0.923952</td>
+<td>0.941771</td>
+<td>0.951230</td>
+</tr>
+<tr>
+<td>802</td>
+<td>1.141867</td>
+<td>1.062994</td>
+<td>1.024160</td>
+</tr>
+<tr>
+<td>803</td>
+<td>1.384714</td>
+<td>1.116091</td>
+<td>1.170909</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">error</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">{</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">abs</span><span style="color:#111">(</span><span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">c</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">-</span> <span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#111">,</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">abs</span><span style="color:#111">(</span><span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">c</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">-</span> <span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#111">,</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">c</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">-</span> <span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">,</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">c</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">-</span> <span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+<span style="color:#111">}</span><span style="color:#111">)</span>
+
+<span style="color:#111">error</span>
+</code></pre></td></tr></table>
+</div>
+</div><table>
+<thead>
+<tr>
+<th></th>
+<th>abs_err_beta</th>
+<th>abs_err_b</th>
+<th>err_beta</th>
+<th>err_b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0.077989</td>
+<td>0.140098</td>
+<td>0.077989</td>
+<td>0.140098</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.171404</td>
+<td>0.227281</td>
+<td>-0.171404</td>
+<td>-0.227281</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.141371</td>
+<td>0.250201</td>
+<td>0.141371</td>
+<td>0.250201</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.245172</td>
+<td>0.412247</td>
+<td>-0.245172</td>
+<td>-0.412247</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.023403</td>
+<td>0.058042</td>
+<td>-0.023403</td>
+<td>-0.058042</td>
+</tr>
+<tr>
+<td>&hellip;</td>
+<td>&hellip;</td>
+<td>&hellip;</td>
+<td>&hellip;</td>
+<td>&hellip;</td>
+</tr>
+<tr>
+<td>799</td>
+<td>0.738067</td>
+<td>0.665781</td>
+<td>0.738067</td>
+<td>0.665781</td>
+</tr>
+<tr>
+<td>800</td>
+<td>0.364849</td>
+<td>0.339871</td>
+<td>-0.364849</td>
+<td>-0.339871</td>
+</tr>
+<tr>
+<td>801</td>
+<td>0.017819</td>
+<td>0.027278</td>
+<td>-0.017819</td>
+<td>-0.027278</td>
+</tr>
+<tr>
+<td>802</td>
+<td>0.078873</td>
+<td>0.117707</td>
+<td>0.078873</td>
+<td>0.117707</td>
+</tr>
+<tr>
+<td>803</td>
+<td>0.268623</td>
+<td>0.213806</td>
+<td>0.268623</td>
+<td>0.213806</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">error_min</span> <span style="color:#f92672">=</span> <span style="color:#111">min</span><span style="color:#111">(</span><span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">min</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">,</span> <span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">min</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span>
+<span style="color:#111">error_max</span> <span style="color:#f92672">=</span> <span style="color:#111">max</span><span style="color:#111">(</span><span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">max</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">,</span> <span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">max</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span>
+
+<span style="color:#111">fig</span> <span style="color:#f92672">=</span> <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">figure</span><span style="color:#111">(</span><span style="color:#111">figsize</span><span style="color:#f92672">=</span><span style="color:#111">(</span><span style="color:#ae81ff">5</span><span style="color:#111">,</span> <span style="color:#ae81ff">5</span><span style="color:#111">)</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">scatter</span><span style="color:#111">(</span><span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">xlim</span><span style="color:#111">(</span><span style="color:#111">error_min</span><span style="color:#111">,</span> <span style="color:#111">error_max</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">ylim</span><span style="color:#111">(</span><span style="color:#111">error_min</span><span style="color:#111">,</span> <span style="color:#111">error_max</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">tight_layout</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">show</span><span style="color:#111">(</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img src="/images/regression_comparison/output_27_0.png" alt="picture alt"></p>
+<p>By checking the scatter plot, we could see that they&rsquo;re forming a almost linear relationship. Because of this, we run a regression between those two coefficients&rsquo; prediction errors to see the coefficient of the regression.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">regression_model</span> <span style="color:#f92672">=</span> <span style="color:#111">smf</span><span style="color:#f92672">.</span><span style="color:#111">ols</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_beta ~ err_b + 1</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">data</span><span style="color:#f92672">=</span><span style="color:#111">error</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#111">regression_model</span><span style="color:#f92672">.</span><span style="color:#111">summary</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>                                 OLS Regression Results                                
+=======================================================================================
+Dep. Variable:               err_beta   R-squared (uncentered):                   0.994
+Model:                            OLS   Adj. R-squared (uncentered):              0.994
+Method:                 Least Squares   F-statistic:                          1.386e+05
+Date:                Thu, 14 May 2020   Prob (F-statistic):                        0.00
+Time:                        16:30:22   Log-Likelihood:                          880.22
+No. Observations:                 804   AIC:                                     -1758.
+Df Residuals:                     803   BIC:                                     -1754.
+Df Model:                           1                                                  
+Covariance Type:            nonrobust                                                  
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+err_b          0.9729      0.003    372.315      0.000       0.968       0.978
+==============================================================================
+Omnibus:                       83.087   Durbin-Watson:                   2.752
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              354.569
+Skew:                           0.376   Prob(JB):                     1.01e-77
+Kurtosis:                       6.165   Cond. No.                         1.00
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</code></pre>
+<p>From the result, we could see that the cofficient of the regression is almost 1, which means the prediction error of the two regressions are very close. However, since it&rsquo;s still not 1, we could get the relationship that Error_exponential = 0.9729 * Error_rolling. So, the exponential regression is more accurate here.</p>
+<h3 id="plot-of-the-absolute-error-of-two-regressions">Plot of the absolute error of two regressions.</h3>
+<p>By sorting the absolute value of exponential regression model and then plot the prediction errors of those two regressions, we could tell that the result are pretty close. The only obvious difference is when absolute error of exponential weighted regression is extremely high, the absolute error of rolling regression is lower.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">error</span> <span style="color:#f92672">=</span> <span style="color:#111">error</span><span style="color:#f92672">.</span><span style="color:#111">sort_values</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">reset_index</span><span style="color:#111">(</span><span style="color:#111">drop</span><span style="color:#f92672">=</span><span style="color:#111">True</span><span style="color:#111">)</span>
+<span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">rolling</span><span style="color:#111">(</span><span style="color:#ae81ff">20</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">mean</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">plot</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">tight_layout</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">show</span><span style="color:#111">(</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img src="/images/regression_comparison/output_32_0.png" alt="picture alt"></p>
+<h2 id="5-play-with-more-lambda-s">5. Play with more $\lambda s$</h2>
+<p>Using only one lambda is pretty limited here. So we dig into the exploration and try different lambda (different windows) here to see if there&rsquo;re any patterns behind it.</p>
+<p>Following, I chose $\lambda$ = 0.07, 0.05, 0.03 and 0.009. The corresponding window for the rolling regression here is: 29, 47, 60, 222.</p>
+<p>In order to make the computation easier, I rewrote the above code and make it a function which takes $\lambda$ as input.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#00a8c8">def</span> <span style="color:#75af00">coef_comparison</span><span style="color:#111">(</span><span style="color:#111">lam</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    
+    <span style="color:#75715e"># Functions to obtain alpha and window regarding different lambdas</span>
+    <span style="color:#00a8c8">def</span> <span style="color:#75af00">lambda_to_alpha</span><span style="color:#111">(</span><span style="color:#111">lam</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> <span style="color:#111">np</span><span style="color:#f92672">.</span><span style="color:#111">exp</span><span style="color:#111">(</span><span style="color:#f92672">-</span><span style="color:#111">lam</span><span style="color:#111">)</span>
+    
+    <span style="color:#00a8c8">def</span> <span style="color:#75af00">lambda_to_window</span><span style="color:#111">(</span><span style="color:#111">lam</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">return</span> <span style="color:#111">round</span><span style="color:#111">(</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> <span style="color:#111">lam</span><span style="color:#111">)</span>
+
+    
+    <span style="color:#111">alpha</span> <span style="color:#f92672">=</span> <span style="color:#111">lambda_to_alpha</span><span style="color:#111">(</span><span style="color:#111">lam</span><span style="color:#111">)</span>
+    <span style="color:#111">window</span> <span style="color:#f92672">=</span> <span style="color:#111">lambda_to_window</span><span style="color:#111">(</span><span style="color:#111">lam</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">assert</span> <span style="color:#111">window</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">300</span>
+    
+    
+    <span style="color:#75715e"># Compute exponential-weighted coefficient</span>
+    <span style="color:#111">EW_COEF</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+    <span style="color:#111">SPY_VAR</span> <span style="color:#f92672">=</span> <span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">ewm</span><span style="color:#111">(</span><span style="color:#111">alpha</span><span style="color:#f92672">=</span><span style="color:#111">alpha</span><span style="color:#111">,</span> <span style="color:#111">adjust</span><span style="color:#f92672">=</span><span style="color:#111">True</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">var</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">[</span><span style="color:#ae81ff">1</span><span style="color:#111">:</span><span style="color:#111">]</span>
+    
+    <span style="color:#00a8c8">for</span> <span style="color:#111">tic</span> <span style="color:#f92672">in</span> <span style="color:#111">tqdm</span><span style="color:#111">(</span><span style="color:#111">EOD</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">tic</span> <span style="color:#f92672">!=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span>
+            <span style="color:#111">temp</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">concat</span><span style="color:#111">(</span><span style="color:#111">[</span><span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">axis</span><span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#111">)</span>
+            <span style="color:#111">temp_cov</span> <span style="color:#f92672">=</span> <span style="color:#111">temp</span><span style="color:#f92672">.</span><span style="color:#111">ewm</span><span style="color:#111">(</span><span style="color:#111">alpha</span><span style="color:#f92672">=</span><span style="color:#111">alpha</span><span style="color:#111">,</span> <span style="color:#111">adjust</span><span style="color:#f92672">=</span><span style="color:#111">True</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">cov</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">xs</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">level</span><span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#111">)</span><span style="color:#111">[</span><span style="color:#ae81ff">1</span><span style="color:#111">:</span><span style="color:#111">]</span>
+            <span style="color:#111">temp_coef</span> <span style="color:#f92672">=</span> <span style="color:#111">temp_cov</span> <span style="color:#f92672">/</span> <span style="color:#111">SPY_VAR</span>
+            <span style="color:#111">EW_COEF</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">temp_coef</span>
+    
+    
+    <span style="color:#75715e"># Build time-list of the four specific dates</span>
+    <span style="color:#111">time_list</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2018-06-29</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2018-12-31</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2019-06-28</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2019-11-29</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+    <span style="color:#111">time_list</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">to_datetime</span><span style="color:#111">(</span><span style="color:#111">t</span><span style="color:#111">)</span> <span style="color:#00a8c8">for</span> <span style="color:#111">t</span> <span style="color:#f92672">in</span> <span style="color:#111">time_list</span><span style="color:#111">]</span>
+    
+    
+    <span style="color:#75715e"># Find the four specific dates&#39; exponential-weighted beta</span>
+    <span style="color:#111">ew_beta</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">tic</span> <span style="color:#f92672">in</span> <span style="color:#111">EW_COEF</span><span style="color:#111">:</span>
+        <span style="color:#111">temp</span> <span style="color:#f92672">=</span> <span style="color:#111">EW_COEF</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">loc</span><span style="color:#111">[</span><span style="color:#111">time_list</span><span style="color:#111">]</span>
+        <span style="color:#111">ew_beta</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">temp</span>
+        
+    <span style="color:#75715e"># Compute the rolling regression</span>
+    <span style="color:#111">rolling_coef_b</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">tic</span> <span style="color:#f92672">in</span> <span style="color:#111">EOD</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">tic</span> <span style="color:#f92672">!=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span>
+            <span style="color:#111">model</span> <span style="color:#f92672">=</span> <span style="color:#111">PandasRollingOLS</span><span style="color:#111">(</span><span style="color:#111">y</span><span style="color:#f92672">=</span><span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">x</span><span style="color:#f92672">=</span><span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">window</span><span style="color:#f92672">=</span><span style="color:#111">window</span><span style="color:#111">)</span>
+            <span style="color:#111">beta</span> <span style="color:#f92672">=</span> <span style="color:#111">model</span><span style="color:#f92672">.</span><span style="color:#111">beta</span><span style="color:#f92672">.</span><span style="color:#111">loc</span><span style="color:#111">[</span><span style="color:#111">time_list</span><span style="color:#111">]</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">feature1</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+            <span style="color:#111">beta</span><span style="color:#f92672">.</span><span style="color:#111">name</span> <span style="color:#f92672">=</span> <span style="color:#111">tic</span>
+            <span style="color:#111">rolling_coef_b</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">beta</span>
+            
+    <span style="color:#75715e"># According to the time list, set the future 20-day time list </span>
+    <span style="color:#111">time_list_2</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#111">t</span> <span style="color:#f92672">+</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">offsets</span><span style="color:#f92672">.</span><span style="color:#111">BDay</span><span style="color:#111">(</span><span style="color:#ae81ff">20</span><span style="color:#111">)</span> <span style="color:#00a8c8">for</span> <span style="color:#111">t</span> <span style="color:#f92672">in</span> <span style="color:#111">time_list</span><span style="color:#111">]</span>
+    
+    <span style="color:#75715e"># Compute rolling regression for the future 20 days (which is our benchmark here)</span>
+    <span style="color:#111">rolling_coef_c</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">tic</span> <span style="color:#f92672">in</span> <span style="color:#111">EOD</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">tic</span> <span style="color:#f92672">!=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span>
+            <span style="color:#111">model</span> <span style="color:#f92672">=</span> <span style="color:#111">PandasRollingOLS</span><span style="color:#111">(</span><span style="color:#111">y</span><span style="color:#f92672">=</span><span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">x</span><span style="color:#f92672">=</span><span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">SPY</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">window</span><span style="color:#f92672">=</span><span style="color:#ae81ff">20</span><span style="color:#111">)</span>
+            <span style="color:#111">beta</span> <span style="color:#f92672">=</span> <span style="color:#111">model</span><span style="color:#f92672">.</span><span style="color:#111">beta</span><span style="color:#f92672">.</span><span style="color:#111">loc</span><span style="color:#111">[</span><span style="color:#111">time_list</span><span style="color:#111">]</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">feature1</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+            <span style="color:#111">beta</span><span style="color:#f92672">.</span><span style="color:#111">name</span> <span style="color:#f92672">=</span> <span style="color:#111">tic</span>
+            <span style="color:#111">rolling_coef_c</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">beta</span>
+            
+    <span style="color:#75715e"># Convert the coefficients&#39; values into seperate arrays           </span>
+    <span style="color:#111">y</span> <span style="color:#f92672">=</span> <span style="color:#111">np</span><span style="color:#f92672">.</span><span style="color:#111">array</span><span style="color:#111">(</span><span style="color:#111">list</span><span style="color:#111">(</span><span style="color:#111">map</span><span style="color:#111">(</span><span style="color:#111">list</span><span style="color:#111">,</span> <span style="color:#111">rolling_coef_c</span><span style="color:#f92672">.</span><span style="color:#111">values</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">)</span>
+    <span style="color:#111">y_pred_ew</span> <span style="color:#f92672">=</span> <span style="color:#111">np</span><span style="color:#f92672">.</span><span style="color:#111">array</span><span style="color:#111">(</span><span style="color:#111">list</span><span style="color:#111">(</span><span style="color:#111">map</span><span style="color:#111">(</span><span style="color:#111">list</span><span style="color:#111">,</span> <span style="color:#111">ew_beta</span><span style="color:#f92672">.</span><span style="color:#111">values</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">)</span>
+    <span style="color:#111">y_pred_wd</span> <span style="color:#f92672">=</span> <span style="color:#111">np</span><span style="color:#f92672">.</span><span style="color:#111">array</span><span style="color:#111">(</span><span style="color:#111">list</span><span style="color:#111">(</span><span style="color:#111">map</span><span style="color:#111">(</span><span style="color:#111">list</span><span style="color:#111">,</span> <span style="color:#111">rolling_coef_b</span><span style="color:#f92672">.</span><span style="color:#111">values</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#111">)</span>
+    
+    <span style="color:#75715e"># Calculate the MAE and MSE of the two predictions in order to compare them</span>
+    <span style="color:#111">mae_ew</span> <span style="color:#f92672">=</span> <span style="color:#111">abs</span><span style="color:#111">(</span><span style="color:#111">y</span> <span style="color:#f92672">-</span> <span style="color:#111">y_pred_ew</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">mean</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">mae_wd</span> <span style="color:#f92672">=</span> <span style="color:#111">abs</span><span style="color:#111">(</span><span style="color:#111">y</span> <span style="color:#f92672">-</span> <span style="color:#111">y_pred_wd</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">mean</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">mse_ew</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">(</span><span style="color:#111">y</span> <span style="color:#f92672">-</span> <span style="color:#111">y_pred_ew</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">mean</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">mse_wd</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">(</span><span style="color:#111">y</span> <span style="color:#f92672">-</span> <span style="color:#111">y_pred_wd</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">mean</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">For exponential-weighted regression, the prediction</span><span style="color:#8045ff">\&#39;</span><span style="color:#d88200">s MAE={:.4f}, MSE={:.4f};</span><span style="color:#8045ff">\n</span><span style="color:#d88200">&#39;</span>
+          <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">For rolling regression, the prediction</span><span style="color:#8045ff">\&#39;</span><span style="color:#d88200">s MAE={:.4f}, MSE={:.4f}</span><span style="color:#d88200">&#39;</span><span style="color:#f92672">.</span><span style="color:#111">format</span><span style="color:#111">(</span><span style="color:#111">mae_ew</span><span style="color:#111">,</span> <span style="color:#111">mse_ew</span><span style="color:#111">,</span> <span style="color:#111">mae_wd</span><span style="color:#111">,</span> <span style="color:#111">mse_wd</span><span style="color:#111">)</span><span style="color:#111">)</span>
+    
+    <span style="color:#75715e"># Create a dataframe of the three different coefficients</span>
+    <span style="color:#111">df_coef</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">{</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">c</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">y</span><span style="color:#f92672">.</span><span style="color:#111">flatten</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">,</span>
+                  <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">y_pred_ew</span><span style="color:#f92672">.</span><span style="color:#111">flatten</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">,</span>
+                  <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">b</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">y_pred_wd</span><span style="color:#f92672">.</span><span style="color:#111">flatten</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">}</span><span style="color:#111">)</span>
+
+    <span style="color:#75715e"># Create a dataframe of the prediction errors of the two predictions</span>
+    <span style="color:#111">error</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">{</span>
+        <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">abs</span><span style="color:#111">(</span><span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">c</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">-</span> <span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#111">,</span>
+        <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">abs</span><span style="color:#111">(</span><span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">c</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">-</span> <span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#111">,</span>
+        <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">c</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">-</span> <span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">,</span>
+        <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">c</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">-</span> <span style="color:#111">df_coef</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+    <span style="color:#111">}</span><span style="color:#111">)</span>
+    
+    <span style="color:#75715e"># Scatter plot</span>
+    <span style="color:#111">error_min</span> <span style="color:#f92672">=</span> <span style="color:#111">min</span><span style="color:#111">(</span><span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">min</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">,</span> <span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">min</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span>
+    <span style="color:#111">error_max</span> <span style="color:#f92672">=</span> <span style="color:#111">max</span><span style="color:#111">(</span><span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">max</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">,</span> <span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">max</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span>
+    
+    <span style="color:#111">fig</span> <span style="color:#f92672">=</span> <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">figure</span><span style="color:#111">(</span><span style="color:#111">figsize</span><span style="color:#f92672">=</span><span style="color:#111">(</span><span style="color:#ae81ff">5</span><span style="color:#111">,</span> <span style="color:#ae81ff">5</span><span style="color:#111">)</span><span style="color:#111">)</span>
+    <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">scatter</span><span style="color:#111">(</span><span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">)</span>
+    <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">xlim</span><span style="color:#111">(</span><span style="color:#111">error_min</span><span style="color:#111">,</span> <span style="color:#111">error_max</span><span style="color:#111">)</span>
+    <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">ylim</span><span style="color:#111">(</span><span style="color:#111">error_min</span><span style="color:#111">,</span> <span style="color:#111">error_max</span><span style="color:#111">)</span>
+    <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">tight_layout</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">show</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    
+    <span style="color:#75715e"># Regression between two errors</span>
+    <span style="color:#111">regression_model</span> <span style="color:#f92672">=</span> <span style="color:#111">smf</span><span style="color:#f92672">.</span><span style="color:#111">ols</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">err_beta ~ err_b + 1</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">data</span><span style="color:#f92672">=</span><span style="color:#111">error</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#111">regression_model</span><span style="color:#f92672">.</span><span style="color:#111">summary</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#111">)</span>
+    
+    <span style="color:#75715e"># Plot the prediction erros</span>
+    <span style="color:#111">error</span> <span style="color:#f92672">=</span> <span style="color:#111">error</span><span style="color:#f92672">.</span><span style="color:#111">sort_values</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">reset_index</span><span style="color:#111">(</span><span style="color:#111">drop</span><span style="color:#f92672">=</span><span style="color:#111">True</span><span style="color:#111">)</span>
+    <span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">rolling</span><span style="color:#111">(</span><span style="color:#ae81ff">20</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">mean</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">error</span><span style="color:#111">[</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_beta</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">abs_err_b</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span><span style="color:#111">]</span><span style="color:#f92672">.</span><span style="color:#111">plot</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">title</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">Lambda={}, Window={}</span><span style="color:#d88200">&#39;</span><span style="color:#f92672">.</span><span style="color:#111">format</span><span style="color:#111">(</span><span style="color:#111">lam</span><span style="color:#111">,</span> <span style="color:#111">window</span><span style="color:#111">)</span><span style="color:#111">)</span>
+    <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">tight_layout</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">show</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="lambda--007-window--29">$\lambda$ = 0.07, window = 29</h3>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">coef_comparison</span><span style="color:#111">(</span><span style="color:#ae81ff">0.07</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>For exponential-weighted regression, the prediction's MAE=0.3028, MSE=0.3219;
+For rolling regression, the prediction's MAE=0.3434, MSE=0.4840
+</code></pre>
+<p><img src="/images/regression_comparison/output_36_2.png" alt="picture alt"></p>
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               err_beta   R-squared:                       0.372
+Model:                            OLS   Adj. R-squared:                  0.371
+Method:                 Least Squares   F-statistic:                     475.0
+Date:                Thu, 14 May 2020   Prob (F-statistic):           4.50e-83
+Time:                        19:08:53   Log-Likelihood:                -498.01
+No. Observations:                 804   AIC:                             1000.
+Df Residuals:                     802   BIC:                             1009.
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.0012      0.016      0.076      0.939      -0.030       0.032
+err_b          0.4976      0.023     21.795      0.000       0.453       0.542
+==============================================================================
+Omnibus:                      484.829   Durbin-Watson:                   2.069
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):            25718.642
+Skew:                           1.999   Prob(JB):                         0.00
+Kurtosis:                      30.418   Cond. No.                         1.44
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</code></pre>
+<p><img src="/images/regression_comparison/output_36_4.png" alt="picture alt"></p>
+<p>From the scatter plot and also the regression summary, we could see that the prediction errors of the two regressions are less linear correlated. After plotting the prediction errors, from the plot, we could see that for most of the time, the absolute error of rolling regression is higher and the exponential weighted regression&rsquo;s prediction is more accurate (as the MAE and MSE shows).</p>
+<h3 id="lambda--005-window--40">$\lambda$ = 0.05, window = 40</h3>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">coef_comparison</span><span style="color:#111">(</span><span style="color:#ae81ff">0.05</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>For exponential-weighted regression, the prediction's MAE=0.3741, MSE=0.5525;
+For rolling regression, the prediction's MAE=0.4540, MSE=0.7896
+</code></pre>
+<p><img src="/images/regression_comparison/output_39_2.png" alt="picture alt"></p>
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               err_beta   R-squared:                       0.878
+Model:                            OLS   Adj. R-squared:                  0.878
+Method:                 Least Squares   F-statistic:                     5796.
+Date:                Thu, 14 May 2020   Prob (F-statistic):               0.00
+Time:                        17:26:21   Log-Likelihood:                -54.356
+No. Observations:                 804   AIC:                             112.7
+Df Residuals:                     802   BIC:                             122.1
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.0062      0.009     -0.678      0.498      -0.024       0.012
+err_b          0.7845      0.010     76.131      0.000       0.764       0.805
+==============================================================================
+Omnibus:                      828.136   Durbin-Watson:                   1.963
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):           245095.795
+Skew:                           4.105   Prob(JB):                         0.00
+Kurtosis:                      88.140   Cond. No.                         1.14
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</code></pre>
+<p><img src="/images/regression_comparison/output_39_4.png" alt="picture alt"></p>
+<p>Things are very similar with the previous one. Here, for most of the time, the prediction error of rolling regression is higher than that of exponential regression. However, the difference between the two mothods are shrinking.</p>
+<h3 id="lambda--003-window--67">$\lambda$ = 0.03, window = 67</h3>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">coef_comparison</span><span style="color:#111">(</span><span style="color:#ae81ff">0.03</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>For exponential-weighted regression, the prediction's MAE=0.4600, MSE=0.8762;
+For rolling regression, the prediction's MAE=0.5081, MSE=0.9748
+</code></pre>
+<p><img src="/images/regression_comparison/output_42_2.png" alt="picture alt"></p>
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               err_beta   R-squared:                       0.925
+Model:                            OLS   Adj. R-squared:                  0.925
+Method:                 Least Squares   F-statistic:                     9962.
+Date:                Thu, 14 May 2020   Prob (F-statistic):               0.00
+Time:                        17:27:46   Log-Likelihood:                -42.657
+No. Observations:                 804   AIC:                             89.31
+Df Residuals:                     802   BIC:                             98.69
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.0124      0.009      1.372      0.171      -0.005       0.030
+err_b          0.9116      0.009     99.809      0.000       0.894       0.930
+==============================================================================
+Omnibus:                     1403.599   Durbin-Watson:                   2.011
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):          1510276.440
+Skew:                          11.096   Prob(JB):                         0.00
+Kurtosis:                     214.164   Cond. No.                         1.04
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</code></pre>
+<p><img src="/images/regression_comparison/output_42_4.png" alt="picture alt"></p>
+<p>As the window is widening, rolling regression is improving. However, exponential weighted regression is still preferred here.</p>
+<h3 id="lambda--0009-window--222">$\lambda$ = 0.009, window = 222</h3>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">coef_comparison</span><span style="color:#111">(</span><span style="color:#ae81ff">0.009</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>For exponential-weighted regression, the prediction's MAE=0.5388, MSE=1.1476;
+For rolling regression, the prediction's MAE=0.5571, MSE=1.1940
+</code></pre>
+<p><img src="/images/regression_comparison/output_45_2.png" alt="picture alt"></p>
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               err_beta   R-squared:                       0.995
+Model:                            OLS   Adj. R-squared:                  0.995
+Method:                 Least Squares   F-statistic:                 1.503e+05
+Date:                Thu, 14 May 2020   Prob (F-statistic):               0.00
+Time:                        17:25:35   Log-Likelihood:                 910.91
+No. Observations:                 804   AIC:                            -1818.
+Df Residuals:                     802   BIC:                            -1808.
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.0007      0.003      0.241      0.810      -0.005       0.006
+err_b          0.9777      0.003    387.675      0.000       0.973       0.983
+==============================================================================
+Omnibus:                       85.769   Durbin-Watson:                   2.566
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              580.498
+Skew:                          -0.152   Prob(JB):                    8.84e-127
+Kurtosis:                       7.152   Cond. No.                         1.11
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</code></pre>
+<p><img src="/images/regression_comparison/output_45_4.png" alt="picture alt"></p>
+<p>Most of the time, the performance of the two regressions are very close. Except for the extreme case when the error of exponential weighted regression is high, then the rolling regression is more preferred.</p>
+<h2 id="6-conclusion">6. Conclusion</h2>
+<p>From the performances we get above, we could conclude that overall, the performance of exponential weighted regression is better and the prediction is more accurate. The limitation of the rolling regression is that comparing with exponential weighted regression, the information it gets is not enough. So, as the $\lambda$ gets smaller, which implies the window of the rolling regression is larger, the performance is better and closer to exponential weighted regression, which suggests us that in order to improve the rolling regression, we should widen the window.</p>
+<p>However, we could not just widen our window unlimitedly. The edge of rolling regression is that its more reactive and responsive to the real-time market change. When something huge happens, it will immediately reflect on the regression and the prediction. When the window of rolling regression is larger, the effect of real-time information will be smaller, which is not good for activities such as high-frequency trading.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        <script src="https://utteranc.es/client.js"
+  repo= "christineeeeee/christineeeeee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+      </footer>
+    </article>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js" id="MathJax-script"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [
+          ['$', '$'], ['\\(', '\\)']
+        ],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+
+</footer>
+
+    </main>
+
+    
+
+  </body>
+
+</html>

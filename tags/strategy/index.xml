@@ -31,7 +31,17 @@
     </item>
     
     <item>
-      <title>Return predictions From Trade Flow</title>
+      <title>Comparison Between Exponential Weighted and Rolling Regression</title>
+      <link>https://christineeeeee.com/posts/regression_comparison/</link>
+      <pubDate>Fri, 15 May 2020 21:16:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/regression_comparison/</guid>
+      <description>This research discusses two normal prediction ways people are using: exponential weighted regression and rolling regression. By comparing the prediction errors of both ways, we generally get the idea of the difference between these two regressions.
+1. Introduction Comparison between two ways of regression  Exponential Weighted Moving Regression: considering all the previous data to do the regression, however, following the intuition that the nearer data have more effects on the future data, the weight of data are different regarding time.</description>
+    </item>
+    
+    <item>
+      <title>Return Predictions From Trade Flow</title>
       <link>https://christineeeeee.com/posts/trade_flow/</link>
       <pubDate>Sat, 25 Apr 2020 13:24:30 +0000</pubDate>
       
