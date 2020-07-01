@@ -94,6 +94,17 @@ For international students, taking TOEFL or IELTS test is a necessary step if th
     </item>
     
     <item>
+      <title>Quantile Trading</title>
+      <link>https://christineeeeee.com/posts/hw4_christine-li/</link>
+      <pubDate>Wed, 15 Apr 2020 12:45:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/hw4_christine-li/</guid>
+      <description>This is a strategy which we trade different securities by ranking their performance and using their quantile as signals.
+1. Data preparation Introduction of the packages we used We&amp;rsquo;re using several really important python packages in this strategy:
+ Pandas: dataframe manipulation NumPy: support for mathematical functions and computation of arrays and matrics Quandl: source of our future data Statsmodel: statistical analysis Matplotlib: plot tools Seaborn: statistical data visualization Glob: retrieve files matching a specified pattern os: interact with the operating system tqdm: progress bar  1 2 3 4 5 6 7 8 9 10 11 12 13 14  import os import numpy as np import pandas as pd import pickle import quandl import warnings from functools import reduce from tqdm.</description>
+    </item>
+    
+    <item>
       <title>世界上的房思琪们</title>
       <link>https://christineeeeee.com/posts/bombshell/</link>
       <pubDate>Thu, 09 Apr 2020 17:57:00 +0000</pubDate>
