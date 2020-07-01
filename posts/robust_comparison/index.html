@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Christine">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Robust and Bayesian Regression Comparison"/>
+<meta name="twitter:description" content="Robust techniques and variable selection can help us obtain more stable linear fits. In this post, I used return regressions against returns on State Street sctors ETFs to test this fact. By computing out-of-sample regression, I contrast the performance of OLS regression, robust regression(huber and tukey) and positive lasso regressions.
+1 2 3 4 5 6 7 8 9 10 11 12  import os import quandl import pickle import warnings import numpy as np import pandas as pd import seaborn as sns from tqdm."/>
+
+    <meta property="og:title" content="Robust and Bayesian Regression Comparison" />
+<meta property="og:description" content="Robust techniques and variable selection can help us obtain more stable linear fits. In this post, I used return regressions against returns on State Street sctors ETFs to test this fact. By computing out-of-sample regression, I contrast the performance of OLS regression, robust regression(huber and tukey) and positive lasso regressions.
+1 2 3 4 5 6 7 8 9 10 11 12  import os import quandl import pickle import warnings import numpy as np import pandas as pd import seaborn as sns from tqdm." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://christineeeeee.com/posts/robust_comparison/" />
+<meta property="article:published_time" content="2020-05-30T02:08:00+00:00" />
+<meta property="article:modified_time" content="2020-05-30T02:08:00+00:00" />
+
+
+    
+      <base href="https://christineeeeee.com/posts/robust_comparison/">
+    
+    <title>
+  Robust and Bayesian Regression Comparison · Stop this train
+</title>
+
+    
+      <link rel="canonical" href="https://christineeeeee.com/posts/robust_comparison/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.c6a6f7e4e5b9eae62968f9dee6cad8903a7a12c11df9305249ee05c53679cafe.css" integrity="sha256-xqb35OW56uYpaPne5srYkDp6EsEd&#43;TBSSe4FxTZ5yv4=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+      <link rel="stylesheet" href="/css/custom.css" />
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.63.1" />
+  </head>
+
+  
+  
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Stop this train
+    </a>
+    
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/pieces/">Pieces</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Robust and Bayesian Regression Comparison</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-05-30T02:08:00Z'>
+                May 30, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              13-minute read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="/tags/python/">Python</a>
+      <span class="separator">•</span>
+    <a href="/tags/strategy/">Strategy</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <p>Robust techniques and variable selection can help us obtain more stable linear fits. In this post, I used return regressions against returns on State Street sctors ETFs to test this fact. By computing out-of-sample regression, I contrast the performance of OLS regression, robust regression(huber and tukey) and positive lasso regressions.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> <span style="color:#111">os</span>
+<span style="color:#f92672">import</span> <span style="color:#111">quandl</span>
+<span style="color:#f92672">import</span> <span style="color:#111">pickle</span>
+<span style="color:#f92672">import</span> <span style="color:#111">warnings</span>
+<span style="color:#f92672">import</span> <span style="color:#111">numpy</span> <span style="color:#f92672">as</span> <span style="color:#111">np</span>
+<span style="color:#f92672">import</span> <span style="color:#111">pandas</span> <span style="color:#f92672">as</span> <span style="color:#111">pd</span>
+<span style="color:#f92672">import</span> <span style="color:#111">seaborn</span> <span style="color:#f92672">as</span> <span style="color:#111">sns</span>
+<span style="color:#f92672">from</span> <span style="color:#111">tqdm.auto</span> <span style="color:#f92672">import</span> <span style="color:#111">tqdm</span>
+<span style="color:#f92672">import</span> <span style="color:#111">statsmodels.api</span> <span style="color:#f92672">as</span> <span style="color:#111">sm</span>
+<span style="color:#f92672">from</span> <span style="color:#111">functools</span> <span style="color:#f92672">import</span> <span style="color:#111">lru_cache</span>
+<span style="color:#f92672">import</span> <span style="color:#111">matplotlib.pyplot</span> <span style="color:#f92672">as</span> <span style="color:#111">plt</span>
+<span style="color:#f92672">from</span> <span style="color:#111">sklearn</span> <span style="color:#f92672">import</span> <span style="color:#111">linear_model</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="1-import-eod-from-quandl">1. Import EOD from Quandl</h2>
+<p>First we load ETF and stocks that satisfies our requirements. By requirement we are saying each of the following stocks</p>
+<ol>
+<li>Has 41 days of adj close prices from 2019/01/01 to 2019/03/01 inclusive, and</li>
+<li>Can give 1, 3 and 6 non-zero betas from Lasso (both with and without positive beta restriction) regression for later analysis.</li>
+</ol>
+<p>The full list of tickers are as below:</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">ETFs</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">XLC</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">XLY</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">XLP</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">XLE</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">XLF</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">XLV</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">XLI</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">XLB</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">XLRE</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">XLK</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">XLU</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+<span style="color:#111">stocks</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AADR</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AAON</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ACER</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ACIW</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ACLS</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ACM</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ACT</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ACWF</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ACWI</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ACWX</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span>
+          <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ADT</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AFT</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AFTY</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AGD</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AGO_P_B</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AHT</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AIEQ</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AIG_WS</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AIRR</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ALKS</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span>
+          <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ALL</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ALXN</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AMGN</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AMN</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AMNB</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AMOT</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ANDE</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ANSS</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AOA</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">AON</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Now we start actual loading.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">tickers</span> <span style="color:#f92672">=</span> <span style="color:#111">ETFs</span> <span style="color:#f92672">+</span> <span style="color:#111">stocks</span>
+<span style="color:#111">ETFs</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">intercept</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">+</span> <span style="color:#111">ETFs</span>
+
+<span style="color:#111">start_date</span> <span style="color:#f92672">=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2019-01-01</span><span style="color:#d88200">&#39;</span>
+<span style="color:#111">end_date</span> <span style="color:#f92672">=</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">2019-03-01</span><span style="color:#d88200">&#39;</span>
+
+<span style="color:#00a8c8">def</span> <span style="color:#75af00">get_eod</span><span style="color:#111">(</span><span style="color:#111">tic</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">return</span> <span style="color:#111">quandl</span><span style="color:#f92672">.</span><span style="color:#111">get</span><span style="color:#111">(</span><span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">EOD/{tic}</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">start_date</span><span style="color:#f92672">=</span><span style="color:#111">start_date</span><span style="color:#111">,</span> <span style="color:#111">end_date</span><span style="color:#f92672">=</span><span style="color:#111">end_date</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">Adj_Close</span>
+
+<span style="color:#00a8c8">if</span> <span style="color:#111">os</span><span style="color:#f92672">.</span><span style="color:#111">path</span><span style="color:#f92672">.</span><span style="color:#111">isfile</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">EOD.pkl</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">with</span> <span style="color:#111">open</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">EOD.pkl</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">rb</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span> <span style="color:#00a8c8">as</span> <span style="color:#111">f</span><span style="color:#111">:</span>
+        <span style="color:#111">EOD</span> <span style="color:#f92672">=</span> <span style="color:#111">pickle</span><span style="color:#f92672">.</span><span style="color:#111">load</span><span style="color:#111">(</span><span style="color:#111">f</span><span style="color:#111">)</span>
+<span style="color:#00a8c8">else</span><span style="color:#111">:</span>
+    <span style="color:#111">EOD</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">tic</span> <span style="color:#f92672">in</span> <span style="color:#111">tqdm</span><span style="color:#111">(</span><span style="color:#111">tickers</span><span style="color:#111">)</span><span style="color:#111">:</span>
+        <span style="color:#00a8c8">try</span><span style="color:#111">:</span>
+            <span style="color:#111">EOD</span><span style="color:#111">[</span><span style="color:#111">tic</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">get_eod</span><span style="color:#111">(</span><span style="color:#111">tic</span><span style="color:#111">)</span>
+        <span style="color:#00a8c8">except</span> <span style="color:#75af00">Exception</span><span style="color:#111">:</span>
+            <span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#111">f</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">skip {tic} as it</span><span style="color:#8045ff">\&#39;</span><span style="color:#d88200">s missing in EOD dataset</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">with</span> <span style="color:#111">open</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">EOD.pkl</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">wb</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span> <span style="color:#00a8c8">as</span> <span style="color:#111">f</span><span style="color:#111">:</span>
+        <span style="color:#111">pickle</span><span style="color:#f92672">.</span><span style="color:#111">dump</span><span style="color:#111">(</span><span style="color:#111">EOD</span><span style="color:#111">,</span> <span style="color:#111">f</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Compute each ticker&rsquo;s daily return and then seperate the return into in-sample (the first 20 days) and out-of-sample (the last 20 days) data.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">df_EOD</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">EOD</span><span style="color:#111">)</span>
+<span style="color:#111">df_return</span> <span style="color:#f92672">=</span> <span style="color:#111">df_EOD</span><span style="color:#f92672">.</span><span style="color:#111">pct_change</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">df_return</span><span style="color:#f92672">.</span><span style="color:#111">dropna</span><span style="color:#111">(</span><span style="color:#111">inplace</span><span style="color:#f92672">=</span><span style="color:#111">True</span><span style="color:#111">)</span>
+<span style="color:#111">df_return</span><span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">intercept</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+<span style="color:#111">df_insample</span> <span style="color:#f92672">=</span> <span style="color:#111">df_return</span><span style="color:#f92672">.</span><span style="color:#111">iloc</span><span style="color:#111">[</span><span style="color:#111">:</span><span style="color:#ae81ff">20</span><span style="color:#111">]</span>
+<span style="color:#111">df_outsample</span> <span style="color:#f92672">=</span> <span style="color:#111">df_return</span><span style="color:#f92672">.</span><span style="color:#111">iloc</span><span style="color:#111">[</span><span style="color:#ae81ff">20</span><span style="color:#111">:</span><span style="color:#111">]</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="2-regression">2. Regression</h2>
+<p>In this part we perform regressions one by one. For each regression, we first run in-sample fitting to get the optimal configs (if any) and the in-sample betas. Then using the in-sample optimal configs we run out-of-sample regression to get the same amount of coefficients to calculate the in-to-out beta L2 norm as our robustness metric.</p>
+<h3 id="a-ols-regression">A. OLS regression</h3>
+<p>First is OLS regression.</p>
+<h4 id="a-in-sample">a. In-sample</h4>
+<p>No optimization is required in OLS.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">ols_insample_beta_dict</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+<span style="color:#00a8c8">for</span> <span style="color:#111">stock</span> <span style="color:#f92672">in</span> <span style="color:#111">stocks</span><span style="color:#111">:</span>
+    <span style="color:#111">reg_ols</span> <span style="color:#f92672">=</span> <span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">OLS</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">beta_insample</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_ols</span><span style="color:#f92672">.</span><span style="color:#111">params</span>
+    <span style="color:#111">ols_insample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">beta_insample</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="b-out-of-sample">b. Out-of-sample</h4>
+<p>As there&rsquo;s no optimization, we simply rerun the same regression against the out-of-sample dataset.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">ols_outsample_beta_dict</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+<span style="color:#00a8c8">for</span> <span style="color:#111">stock</span> <span style="color:#f92672">in</span> <span style="color:#111">stocks</span><span style="color:#111">:</span>
+    <span style="color:#111">reg_ols</span> <span style="color:#f92672">=</span> <span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">OLS</span><span style="color:#111">(</span><span style="color:#111">df_outsample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_outsample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">beta_outsample</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_ols</span><span style="color:#f92672">.</span><span style="color:#111">params</span>
+    <span style="color:#111">ols_outsample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">beta_outsample</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="c-l2-norm">c. L2 norm</h4>
+<p>The L2 norm is calculated and stored for later analysis.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">ols_insample_beta_df</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">ols_insample_beta_dict</span><span style="color:#111">)</span>
+<span style="color:#111">ols_outsample_beta_df</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">ols_outsample_beta_dict</span><span style="color:#111">)</span>
+<span style="color:#111">ols_beta_diff</span> <span style="color:#f92672">=</span> <span style="color:#111">ols_insample_beta_df</span> <span style="color:#f92672">-</span> <span style="color:#111">ols_outsample_beta_df</span>
+
+<span style="color:#111">ols_l2_norm</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">ols_beta_diff</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">sum</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>
+<span style="color:#111">ols_l2_norm</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>AADR        1.353710
+AAON        5.330675
+ACER        4.029213
+ACIW        4.501306
+ACLS        6.978846
+ACM         1.882538
+ACT         1.235258
+ACWF        0.918673
+ACWI        0.740807
+ACWX        1.695779
+ADT         5.984692
+AFT         1.338696
+AFTY        4.282447
+AGD         2.287036
+AGO_P_B     1.096079
+AHT         8.060704
+AIEQ        0.888335
+AIG_WS     14.980616
+AIRR        1.498807
+ALKS        4.509373
+ALL         2.427588
+ALXN        4.066937
+AMGN        3.331021
+AMN        13.501120
+AMNB        3.191322
+AMOT        2.786852
+ANDE        3.685212
+ANSS        3.813627
+AOA         0.673246
+AON         3.456226
+dtype: float64
+</code></pre>
+<h3 id="b-huber">B. Huber</h3>
+<p>In Huber regression we have a penalty term with parameter t. Therefore we have the ability to optimize this t for in-sample fitting.</p>
+<h4 id="a-in-sample-1">a. In-sample</h4>
+<p>We use grid search to perform the optimization.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">huber_insample_beta_dict</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+<span style="color:#111">huber_t_best</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+<span style="color:#111">t_grid</span> <span style="color:#f92672">=</span> <span style="color:#111">np</span><span style="color:#f92672">.</span><span style="color:#111">arange</span><span style="color:#111">(</span><span style="color:#ae81ff">1</span><span style="color:#111">,</span> <span style="color:#ae81ff">5</span><span style="color:#111">,</span> <span style="color:#f92672">.</span><span style="color:#ae81ff">1</span><span style="color:#111">)</span>
+<span style="color:#00a8c8">for</span> <span style="color:#111">stock</span> <span style="color:#f92672">in</span> <span style="color:#111">stocks</span><span style="color:#111">:</span>
+    <span style="color:#111">mse_best</span> <span style="color:#f92672">=</span> <span style="color:#111">float</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">inf</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">t</span> <span style="color:#f92672">in</span> <span style="color:#111">t_grid</span><span style="color:#111">:</span>
+        <span style="color:#111">reg_huber</span> <span style="color:#f92672">=</span> <span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">RLM</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">M</span><span style="color:#f92672">=</span><span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">robust</span><span style="color:#f92672">.</span><span style="color:#111">norms</span><span style="color:#f92672">.</span><span style="color:#111">HuberT</span><span style="color:#111">(</span><span style="color:#111">t</span><span style="color:#f92672">=</span><span style="color:#111">t</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">)</span>
+        <span style="color:#111">mse</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">-</span> <span style="color:#111">reg_huber</span><span style="color:#f92672">.</span><span style="color:#111">fittedvalues</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">mean</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">mse</span> <span style="color:#f92672">&lt;</span> <span style="color:#111">mse_best</span><span style="color:#111">:</span>
+            <span style="color:#111">mse_best</span> <span style="color:#f92672">=</span> <span style="color:#111">mse</span>
+            <span style="color:#111">huber_t_best</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">t</span>
+    <span style="color:#111">reg_huber</span> <span style="color:#f92672">=</span> <span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">RLM</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">M</span><span style="color:#f92672">=</span><span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">robust</span><span style="color:#f92672">.</span><span style="color:#111">norms</span><span style="color:#f92672">.</span><span style="color:#111">HuberT</span><span style="color:#111">(</span><span style="color:#111">t</span><span style="color:#f92672">=</span><span style="color:#111">huber_t_best</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">beta_insample</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_huber</span><span style="color:#f92672">.</span><span style="color:#111">params</span>
+    <span style="color:#111">huber_insample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">beta_insample</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="b-out-of-sample-1">b. Out-of-sample</h4>
+<p>We use the optimal t we found to run out-of-sample regression.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">huber_outsample_beta_dict</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+<span style="color:#00a8c8">for</span> <span style="color:#111">stock</span> <span style="color:#f92672">in</span> <span style="color:#111">stocks</span><span style="color:#111">:</span>
+    <span style="color:#111">reg_huber</span> <span style="color:#f92672">=</span> <span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">RLM</span><span style="color:#111">(</span><span style="color:#111">df_outsample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_outsample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">M</span><span style="color:#f92672">=</span><span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">robust</span><span style="color:#f92672">.</span><span style="color:#111">norms</span><span style="color:#f92672">.</span><span style="color:#111">HuberT</span><span style="color:#111">(</span><span style="color:#111">t</span><span style="color:#f92672">=</span><span style="color:#111">huber_t_best</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">beta_outsample</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_huber</span><span style="color:#f92672">.</span><span style="color:#111">params</span>
+    <span style="color:#111">huber_outsample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">beta_outsample</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="c-l2-norm-1">c. L2 norm</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">huber_insample_beta_df</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">huber_insample_beta_dict</span><span style="color:#111">)</span>
+<span style="color:#111">huber_outsample_beta_df</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">huber_outsample_beta_dict</span><span style="color:#111">)</span>
+<span style="color:#111">huber_beta_diff</span> <span style="color:#f92672">=</span> <span style="color:#111">huber_insample_beta_df</span> <span style="color:#f92672">-</span> <span style="color:#111">huber_outsample_beta_df</span>
+<span style="color:#111">huber_l2_norm</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">huber_beta_diff</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">sum</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>
+<span style="color:#111">huber_l2_norm</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>AADR        1.390011
+AAON        5.330675
+ACER        4.029213
+ACIW        4.520645
+ACLS        6.978846
+ACM         1.723419
+ACT         1.177438
+ACWF        0.914225
+ACWI        0.740807
+ACWX        1.716467
+ADT         5.984692
+AFT         1.338696
+AFTY        3.177647
+AGD         2.287036
+AGO_P_B     0.926278
+AHT         8.060704
+AIEQ        0.847107
+AIG_WS     14.980616
+AIRR        1.498807
+ALKS        5.871315
+ALL         2.642671
+ALXN        4.030956
+AMGN        3.331021
+AMN        13.499555
+AMNB        3.274254
+AMOT        2.786852
+ANDE        3.685212
+ANSS        3.833712
+AOA         0.742647
+AON         3.454299
+dtype: float64
+</code></pre>
+<h3 id="c-tukey">C. Tukey</h3>
+<p>In Tukey regression there is, similar to Huber reg, a parameter c which is integers.</p>
+<h4 id="a-in-sample-2">a. In-sample</h4>
+<p>We run grid search on c to find its optima based on minimizing in-sample MSE of residuals.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">tukey_insample_beta_dict</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+<span style="color:#111">tukey_c_best</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+<span style="color:#111">c_grid</span> <span style="color:#f92672">=</span> <span style="color:#111">range</span><span style="color:#111">(</span><span style="color:#ae81ff">1</span><span style="color:#111">,</span> <span style="color:#ae81ff">50</span><span style="color:#111">)</span>
+<span style="color:#00a8c8">for</span> <span style="color:#111">stock</span> <span style="color:#f92672">in</span> <span style="color:#111">stocks</span><span style="color:#111">:</span>
+    <span style="color:#111">mse_best</span> <span style="color:#f92672">=</span> <span style="color:#111">float</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">inf</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">c</span> <span style="color:#f92672">in</span> <span style="color:#111">c_grid</span><span style="color:#111">:</span>
+        <span style="color:#111">reg_tukey</span> <span style="color:#f92672">=</span> <span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">RLM</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">M</span><span style="color:#f92672">=</span><span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">robust</span><span style="color:#f92672">.</span><span style="color:#111">norms</span><span style="color:#f92672">.</span><span style="color:#111">TukeyBiweight</span><span style="color:#111">(</span><span style="color:#111">c</span><span style="color:#f92672">=</span><span style="color:#111">c</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">)</span>
+        <span style="color:#111">mse</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">-</span> <span style="color:#111">reg_tukey</span><span style="color:#f92672">.</span><span style="color:#111">fittedvalues</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">mean</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">mse</span> <span style="color:#f92672">&lt;</span> <span style="color:#111">mse_best</span><span style="color:#111">:</span>
+            <span style="color:#111">mse_best</span> <span style="color:#f92672">=</span> <span style="color:#111">mse</span>
+            <span style="color:#111">tukey_c_best</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">c</span>
+    <span style="color:#111">reg_tukey</span> <span style="color:#f92672">=</span> <span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">RLM</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">M</span><span style="color:#f92672">=</span><span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">robust</span><span style="color:#f92672">.</span><span style="color:#111">norms</span><span style="color:#f92672">.</span><span style="color:#111">TukeyBiweight</span><span style="color:#111">(</span><span style="color:#111">c</span><span style="color:#f92672">=</span><span style="color:#111">tukey_c_best</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">beta_insample</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_tukey</span><span style="color:#f92672">.</span><span style="color:#111">params</span>
+    <span style="color:#111">tukey_insample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">beta_insample</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="b-out-of-sample-2">b. Out-of-sample</h4>
+<p>Using in-sample optimal c we run out-of-sample regression to get the other half set of betas.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">tukey_outsample_beta_dict</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+<span style="color:#00a8c8">for</span> <span style="color:#111">stock</span> <span style="color:#f92672">in</span> <span style="color:#111">stocks</span><span style="color:#111">:</span>
+    <span style="color:#111">reg_tukey</span> <span style="color:#f92672">=</span> <span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">RLM</span><span style="color:#111">(</span><span style="color:#111">df_outsample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_outsample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">M</span><span style="color:#f92672">=</span><span style="color:#111">sm</span><span style="color:#f92672">.</span><span style="color:#111">robust</span><span style="color:#f92672">.</span><span style="color:#111">norms</span><span style="color:#f92672">.</span><span style="color:#111">TukeyBiweight</span><span style="color:#111">(</span><span style="color:#111">c</span><span style="color:#f92672">=</span><span style="color:#111">tukey_c_best</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">beta_outsample</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_tukey</span><span style="color:#f92672">.</span><span style="color:#111">params</span>
+    <span style="color:#111">tukey_outsample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">beta_outsample</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="c-l2-norm-2">c. L2 norm</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">tukey_insample_beta_df</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">tukey_insample_beta_dict</span><span style="color:#111">)</span>
+<span style="color:#111">tukey_outsample_beta_df</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">tukey_outsample_beta_dict</span><span style="color:#111">)</span>
+<span style="color:#111">tukey_beta_diff</span> <span style="color:#f92672">=</span> <span style="color:#111">tukey_insample_beta_df</span> <span style="color:#f92672">-</span> <span style="color:#111">tukey_outsample_beta_df</span>
+<span style="color:#111">tukey_l2_norm</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">tukey_beta_diff</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">sum</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>
+<span style="color:#111">tukey_l2_norm</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>AADR        1.354184
+AAON        5.331992
+ACER        4.027493
+ACIW        4.502004
+ACLS        6.981216
+ACM         1.880968
+ACT         1.234964
+ACWF        0.918660
+ACWI        0.740829
+ACWX        1.695937
+ADT         5.980670
+AFT         1.339173
+AFTY        4.280923
+AGD         2.286033
+AGO_P_B     1.095972
+AHT         8.060488
+AIEQ        0.887859
+AIG_WS     14.974489
+AIRR        1.499437
+ALKS        4.503220
+ALL         2.428550
+ALXN        4.066387
+AMGN        3.326690
+AMN        13.498992
+AMNB        3.191148
+AMOT        2.787551
+ANDE        3.686052
+ANSS        3.813933
+AOA         0.674376
+AON         3.455658
+dtype: float64
+</code></pre>
+<h3 id="d-lasso">D. Lasso</h3>
+<p>In regular Lasso regression, we adjust the penalty parameter $\alpha$ to tune the number of non-zero betas. Same as above, we optimize w.r.t. to $\alpha$ to find in-sample optimality but this time we use $R^2$.</p>
+<h4 id="a-in-sample-3">a. In-sample</h4>
+<p>We run grid search on $\alpha$ to find optimal parameters for all different target numbers of non-zero betas (in this problem: 1, 3 or 6).</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">n_target</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#ae81ff">1</span><span style="color:#111">,</span> <span style="color:#ae81ff">3</span><span style="color:#111">,</span> <span style="color:#ae81ff">6</span><span style="color:#111">]</span>
+<span style="color:#111">lasso_insample_beta_dict</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">n</span><span style="color:#111">:</span> <span style="color:#111">{</span><span style="color:#111">}</span> <span style="color:#00a8c8">for</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">}</span>
+<span style="color:#111">lasso_alpha_best</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+
+<span style="color:#00a8c8">for</span> <span style="color:#111">stock</span> <span style="color:#f92672">in</span> <span style="color:#111">stocks</span><span style="color:#111">:</span>
+    <span style="color:#111">alpha_grid</span> <span style="color:#f92672">=</span> <span style="color:#111">np</span><span style="color:#f92672">.</span><span style="color:#111">arange</span><span style="color:#111">(</span><span style="color:#ae81ff">1</span><span style="color:#111">,</span> <span style="color:#ae81ff">1001</span><span style="color:#111">)</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">1e-6</span>
+    <span style="color:#111">r2_best</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">n</span><span style="color:#111">:</span> <span style="color:#ae81ff">0</span> <span style="color:#00a8c8">for</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">}</span>
+    <span style="color:#111">alpha_best</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">alpha</span> <span style="color:#f92672">in</span> <span style="color:#111">alpha_grid</span><span style="color:#111">:</span>
+        <span style="color:#111">reg_lasso</span> <span style="color:#f92672">=</span> <span style="color:#111">linear_model</span><span style="color:#f92672">.</span><span style="color:#111">Lasso</span><span style="color:#111">(</span><span style="color:#111">alpha</span><span style="color:#f92672">=</span><span style="color:#111">alpha</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">)</span>
+        <span style="color:#111">beta</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_lasso</span><span style="color:#f92672">.</span><span style="color:#111">coef_</span>
+        <span style="color:#111">n</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">beta</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">sum</span><span style="color:#111">(</span><span style="color:#111">)</span>
+        <span style="color:#111">r2</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_lasso</span><span style="color:#f92672">.</span><span style="color:#111">score</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">)</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">:</span>
+            <span style="color:#00a8c8">if</span> <span style="color:#111">r2</span> <span style="color:#f92672">&gt;</span> <span style="color:#111">r2_best</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">:</span>
+                <span style="color:#111">r2_best</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">r2</span>
+                <span style="color:#111">alpha_best</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">alpha</span>
+    
+    <span style="color:#00a8c8">for</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">:</span>
+        <span style="color:#111">reg_lasso</span> <span style="color:#f92672">=</span> <span style="color:#111">linear_model</span><span style="color:#f92672">.</span><span style="color:#111">Lasso</span><span style="color:#111">(</span><span style="color:#111">alpha</span><span style="color:#f92672">=</span><span style="color:#111">alpha_best</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">)</span>
+        <span style="color:#111">lasso_insample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_lasso</span><span style="color:#f92672">.</span><span style="color:#111">coef_</span>
+    <span style="color:#111">lasso_alpha_best</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">alpha_best</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="b-out-of-sample-3">b. Out-of-sample</h4>
+<p>For each different n, we run out-of-sample regression with corresponding in-sample optimal $\alpha$.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">lasso_outsample_beta_dict</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">n</span><span style="color:#111">:</span> <span style="color:#111">{</span><span style="color:#111">}</span> <span style="color:#00a8c8">for</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">}</span>
+<span style="color:#00a8c8">for</span> <span style="color:#111">stock</span> <span style="color:#f92672">in</span> <span style="color:#111">stocks</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">:</span>
+        <span style="color:#111">reg_lasso</span> <span style="color:#f92672">=</span> <span style="color:#111">linear_model</span><span style="color:#f92672">.</span><span style="color:#111">Lasso</span><span style="color:#111">(</span><span style="color:#111">alpha</span><span style="color:#f92672">=</span><span style="color:#111">lasso_alpha_best</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">df_outsample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_outsample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">)</span>
+        <span style="color:#111">lasso_outsample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_lasso</span><span style="color:#f92672">.</span><span style="color:#111">coef_</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="c-l2-norm-3">c. L2 norm</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">lasso_l2_norm</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+
+<span style="color:#00a8c8">for</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">:</span>
+    <span style="color:#111">lasso_insample_beta_df</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">lasso_insample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">)</span>
+    <span style="color:#111">lasso_outsample_beta_df</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">lasso_outsample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">)</span>
+    <span style="color:#111">lasso_beta_diff</span> <span style="color:#f92672">=</span> <span style="color:#111">lasso_insample_beta_df</span> <span style="color:#f92672">-</span> <span style="color:#111">lasso_outsample_beta_df</span>
+    <span style="color:#111">lasso_l2_norm</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">lasso_beta_diff</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">sum</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>
+    <span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">n =</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">n</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#111">lasso_l2_norm</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>n = 1
+AADR       0.155828
+AAON       0.175003
+ACER       0.872036
+ACIW       0.620643
+ACLS       0.744314
+ACM        0.314417
+ACT        0.034371
+ACWF       0.344031
+ACWI       0.322220
+ACWX       0.290820
+ADT        0.100632
+AFT        0.121234
+AFTY       0.075920
+AGD        0.126845
+AGO_P_B    0.072990
+AHT        0.640832
+AIEQ       0.312616
+AIG_WS     1.016887
+AIRR       0.103753
+ALKS       0.536951
+ALL        0.251199
+ALXN       0.006286
+AMGN       0.210962
+AMN        1.172191
+AMNB       0.000303
+AMOT       0.003382
+ANDE       0.089362
+ANSS       0.707883
+AOA        0.238605
+AON        0.215213
+dtype: float64
+n = 3
+AADR       0.317361
+AAON       0.646347
+ACER       1.097086
+ACIW       0.852599
+ACLS       0.970315
+ACM        0.311965
+ACT        0.190420
+ACWF       0.333636
+ACWI       0.349658
+ACWX       0.367570
+ADT        0.413495
+AFT        0.170364
+AFTY       0.369955
+AGD        0.392622
+AGO_P_B    0.194950
+AHT        0.628096
+AIEQ       0.430564
+AIG_WS     0.898526
+AIRR       0.353337
+ALKS       0.627170
+ALL        0.551264
+ALXN       0.458300
+AMGN       0.292862
+AMN        2.806067
+AMNB       0.145884
+AMOT       0.734125
+ANDE       0.293687
+ANSS       0.735479
+AOA        0.254537
+AON        1.214032
+dtype: float64
+n = 6
+AADR       0.456563
+AAON       0.955433
+ACER       1.462182
+ACIW       1.853961
+ACLS       1.720626
+ACM        0.866007
+ACT        0.597189
+ACWF       0.418556
+ACWI       0.215605
+ACWX       0.563101
+ADT        1.361210
+AFT        0.438779
+AFTY       1.736157
+AGD        0.391316
+AGO_P_B    0.377466
+AHT        6.894572
+AIEQ       0.320238
+AIG_WS     5.080266
+AIRR       0.694890
+ALKS       1.043629
+ALL        1.120698
+ALXN       1.023300
+AMGN       0.724205
+AMN        5.609016
+AMNB       1.287305
+AMOT       2.139451
+ANDE       1.551472
+ANSS       0.552735
+AOA        0.269326
+AON        2.595071
+dtype: float64
+</code></pre>
+<h3 id="e-positive-lasso">E. Positive Lasso</h3>
+<p>Same as regular Lasso except this time not only do we restrict on the number of non-zero betas, but also we want the remaining betas to be positive.</p>
+<h4 id="a-in-sample-4">a. In-sample</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">n_target</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#ae81ff">1</span><span style="color:#111">,</span> <span style="color:#ae81ff">3</span><span style="color:#111">,</span> <span style="color:#ae81ff">6</span><span style="color:#111">]</span>
+<span style="color:#111">poslasso_insample_beta_dict</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">n</span><span style="color:#111">:</span> <span style="color:#111">{</span><span style="color:#111">}</span> <span style="color:#00a8c8">for</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">}</span>
+<span style="color:#111">poslasso_alpha_best</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+
+<span style="color:#00a8c8">for</span> <span style="color:#111">stock</span> <span style="color:#f92672">in</span> <span style="color:#111">stocks</span><span style="color:#111">:</span>
+    <span style="color:#111">alpha_grid</span> <span style="color:#f92672">=</span> <span style="color:#111">np</span><span style="color:#f92672">.</span><span style="color:#111">arange</span><span style="color:#111">(</span><span style="color:#ae81ff">1</span><span style="color:#111">,</span> <span style="color:#ae81ff">1001</span><span style="color:#111">)</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">1e-6</span>
+    <span style="color:#111">r2_best</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">n</span><span style="color:#111">:</span> <span style="color:#ae81ff">0</span> <span style="color:#00a8c8">for</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">}</span>
+    <span style="color:#111">alpha_best</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">alpha</span> <span style="color:#f92672">in</span> <span style="color:#111">alpha_grid</span><span style="color:#111">:</span>
+        <span style="color:#111">reg_poslasso</span> <span style="color:#f92672">=</span> <span style="color:#111">linear_model</span><span style="color:#f92672">.</span><span style="color:#111">Lasso</span><span style="color:#111">(</span><span style="color:#111">alpha</span><span style="color:#f92672">=</span><span style="color:#111">alpha</span><span style="color:#111">,</span> <span style="color:#111">positive</span><span style="color:#f92672">=</span><span style="color:#111">True</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">)</span>
+        <span style="color:#111">beta</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_poslasso</span><span style="color:#f92672">.</span><span style="color:#111">coef_</span>
+        <span style="color:#111">n</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">beta</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">sum</span><span style="color:#111">(</span><span style="color:#111">)</span>
+        <span style="color:#111">r2</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_poslasso</span><span style="color:#f92672">.</span><span style="color:#111">score</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">)</span>
+        <span style="color:#00a8c8">if</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">:</span>
+            <span style="color:#00a8c8">if</span> <span style="color:#111">r2</span> <span style="color:#f92672">&gt;</span> <span style="color:#111">r2_best</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">:</span>
+                <span style="color:#111">r2_best</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">r2</span>
+                <span style="color:#111">alpha_best</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">alpha</span>
+    
+    <span style="color:#00a8c8">for</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">:</span>
+        <span style="color:#111">reg_poslasso</span> <span style="color:#f92672">=</span> <span style="color:#111">linear_model</span><span style="color:#f92672">.</span><span style="color:#111">Lasso</span><span style="color:#111">(</span><span style="color:#111">alpha</span><span style="color:#f92672">=</span><span style="color:#111">alpha_best</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_insample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">)</span>
+        <span style="color:#111">poslasso_insample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_poslasso</span><span style="color:#f92672">.</span><span style="color:#111">coef_</span>
+    <span style="color:#111">poslasso_alpha_best</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">alpha_best</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="b-out-of-sample-4">b. Out-of-sample</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">poslasso_outsample_beta_dict</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">n</span><span style="color:#111">:</span> <span style="color:#111">{</span><span style="color:#111">}</span> <span style="color:#00a8c8">for</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">}</span>
+<span style="color:#00a8c8">for</span> <span style="color:#111">stock</span> <span style="color:#f92672">in</span> <span style="color:#111">stocks</span><span style="color:#111">:</span>
+    <span style="color:#00a8c8">for</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">:</span>
+        <span style="color:#111">reg_poslasso</span> <span style="color:#f92672">=</span> <span style="color:#111">linear_model</span><span style="color:#f92672">.</span><span style="color:#111">Lasso</span><span style="color:#111">(</span><span style="color:#111">alpha</span><span style="color:#f92672">=</span><span style="color:#111">poslasso_alpha_best</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">positive</span><span style="color:#f92672">=</span><span style="color:#111">True</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">fit</span><span style="color:#111">(</span><span style="color:#111">df_outsample</span><span style="color:#111">[</span><span style="color:#111">ETFs</span><span style="color:#111">]</span><span style="color:#111">,</span> <span style="color:#111">df_outsample</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span><span style="color:#111">)</span>
+        <span style="color:#111">poslasso_outsample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">[</span><span style="color:#111">stock</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">reg_poslasso</span><span style="color:#f92672">.</span><span style="color:#111">coef_</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id="c-l2-norm-4">c. L2 norm</h4>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">poslasso_l2_norm</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span><span style="color:#111">}</span>
+
+<span style="color:#00a8c8">for</span> <span style="color:#111">n</span> <span style="color:#f92672">in</span> <span style="color:#111">n_target</span><span style="color:#111">:</span>
+    <span style="color:#111">poslasso_insample_beta_df</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">poslasso_insample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">)</span>
+    <span style="color:#111">poslasso_outsample_beta_df</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">poslasso_outsample_beta_dict</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">)</span>
+    <span style="color:#111">poslasso_beta_diff</span> <span style="color:#f92672">=</span> <span style="color:#111">poslasso_insample_beta_df</span> <span style="color:#f92672">-</span> <span style="color:#111">poslasso_outsample_beta_df</span>
+    <span style="color:#111">poslasso_l2_norm</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span> <span style="color:#f92672">=</span> <span style="color:#111">(</span><span style="color:#111">poslasso_beta_diff</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">sum</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span><span style="color:#f92672">.</span><span style="color:#ae81ff">5</span>
+    <span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">n =</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">n</span><span style="color:#111">)</span>
+    <span style="color:#00a8c8">print</span><span style="color:#111">(</span><span style="color:#111">poslasso_l2_norm</span><span style="color:#111">[</span><span style="color:#111">n</span><span style="color:#111">]</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><pre><code>n = 1
+AADR       0.155828
+AAON       0.175003
+ACER       0.872036
+ACIW       0.620643
+ACLS       0.744314
+ACM        0.314417
+ACT        0.034371
+ACWF       0.344031
+ACWI       0.322220
+ACWX       0.290820
+ADT        0.100632
+AFT        0.121234
+AFTY       0.075920
+AGD        0.126845
+AGO_P_B    0.072990
+AHT        0.640832
+AIEQ       0.312616
+AIG_WS     1.016887
+AIRR       0.103753
+ALKS       0.536951
+ALL        0.236938
+ALXN       0.006286
+AMGN       0.210962
+AMN        0.263691
+AMNB       0.000303
+AMOT       0.003382
+ANDE       0.089362
+ANSS       0.707883
+AOA        0.238605
+AON        0.215213
+dtype: float64
+n = 3
+AADR       0.317361
+AAON       0.646347
+ACER       1.097086
+ACIW       0.984273
+ACLS       1.057114
+ACM        0.311965
+ACT        0.190420
+ACWF       0.333636
+ACWI       0.349658
+ACWX       0.367570
+ADT        0.413495
+AFT        0.170364
+AFTY       0.369955
+AGD        0.392622
+AGO_P_B    0.194871
+AHT        0.628096
+AIEQ       0.430564
+AIG_WS     0.898526
+AIRR       0.353337
+ALKS       0.627170
+ALL        0.232596
+ALXN       0.458300
+AMGN       0.292862
+AMN        0.311460
+AMNB       0.145884
+AMOT       0.919254
+ANDE       1.715678
+ANSS       0.735479
+AOA        0.254537
+AON        0.636419
+dtype: float64
+n = 6
+AADR       0.456563
+AAON       1.125961
+ACER       3.032427
+ACIW       2.936279
+ACLS       2.805377
+ACM        0.704292
+ACT        0.668765
+ACWF       0.418557
+ACWI       0.215605
+ACWX       0.455908
+ADT        3.932955
+AFT        0.696588
+AFTY       0.310241
+AGD        1.169620
+AGO_P_B    0.300354
+AHT        1.592437
+AIEQ       0.320238
+AIG_WS     1.443177
+AIRR       0.798543
+ALKS       2.875320
+ALL        0.670975
+ALXN       1.770219
+AMGN       1.618411
+AMN        1.340530
+AMNB       0.592686
+AMOT       1.332605
+ANDE       0.530865
+ANSS       1.356940
+AOA        0.269326
+AON        1.066722
+dtype: float64
+</code></pre>
+<h2 id="3-comparison">3. Comparison</h2>
+<p>Now that all in-to-out L2 norms of betas are calculated, we can start on comparison between these regressions.</p>
+<h3 id="l2-table">L2 Table</h3>
+<p>A summarized large table would be</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">l2_norms</span> <span style="color:#f92672">=</span> <span style="color:#111">{</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ols</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">ols_l2_norm</span><span style="color:#111">,</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">huber</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">huber_l2_norm</span><span style="color:#111">,</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">tukey</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">tukey_l2_norm</span><span style="color:#111">,</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">lasso1</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">lasso_l2_norm</span><span style="color:#111">[</span><span style="color:#ae81ff">1</span><span style="color:#111">]</span><span style="color:#111">,</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">lasso3</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">lasso_l2_norm</span><span style="color:#111">[</span><span style="color:#ae81ff">3</span><span style="color:#111">]</span><span style="color:#111">,</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">lasso6</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">lasso_l2_norm</span><span style="color:#111">[</span><span style="color:#ae81ff">6</span><span style="color:#111">]</span><span style="color:#111">,</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">poslasso1</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">poslasso_l2_norm</span><span style="color:#111">[</span><span style="color:#ae81ff">1</span><span style="color:#111">]</span><span style="color:#111">,</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">poslasso3</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">poslasso_l2_norm</span><span style="color:#111">[</span><span style="color:#ae81ff">3</span><span style="color:#111">]</span><span style="color:#111">,</span>
+    <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">poslasso6</span><span style="color:#d88200">&#39;</span><span style="color:#111">:</span> <span style="color:#111">poslasso_l2_norm</span><span style="color:#111">[</span><span style="color:#ae81ff">6</span><span style="color:#111">]</span>
+<span style="color:#111">}</span>
+
+<span style="color:#111">l2_norms</span> <span style="color:#f92672">=</span> <span style="color:#111">pd</span><span style="color:#f92672">.</span><span style="color:#111">DataFrame</span><span style="color:#111">(</span><span style="color:#111">l2_norms</span><span style="color:#111">)</span>
+<span style="color:#111">l2_norms</span>
+</code></pre></td></tr></table>
+</div>
+</div><table>
+<thead>
+<tr>
+<th>stock</th>
+<th>ols</th>
+<th>huber</th>
+<th>tukey</th>
+<th>lasso1</th>
+<th>lasso3</th>
+<th>lasso6</th>
+<th>poslasso1</th>
+<th>poslasso3</th>
+<th>poslasso6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AADR</td>
+<td>1.353710</td>
+<td>1.390011</td>
+<td>1.354184</td>
+<td>0.155828</td>
+<td>0.317361</td>
+<td>0.456563</td>
+<td>0.155828</td>
+<td>0.317361</td>
+<td>0.456563</td>
+</tr>
+<tr>
+<td>AAON</td>
+<td>5.330675</td>
+<td>5.330675</td>
+<td>5.331992</td>
+<td>0.175003</td>
+<td>0.646347</td>
+<td>0.955433</td>
+<td>0.175003</td>
+<td>0.646347</td>
+<td>1.125961</td>
+</tr>
+<tr>
+<td>ACER</td>
+<td>4.029213</td>
+<td>4.029213</td>
+<td>4.027493</td>
+<td>0.872036</td>
+<td>1.097086</td>
+<td>1.462182</td>
+<td>0.872036</td>
+<td>1.097086</td>
+<td>3.032427</td>
+</tr>
+<tr>
+<td>ACIW</td>
+<td>4.501306</td>
+<td>4.520645</td>
+<td>4.502004</td>
+<td>0.620643</td>
+<td>0.852599</td>
+<td>1.853961</td>
+<td>0.620643</td>
+<td>0.984273</td>
+<td>2.936279</td>
+</tr>
+<tr>
+<td>ACLS</td>
+<td>6.978846</td>
+<td>6.978846</td>
+<td>6.981216</td>
+<td>0.744314</td>
+<td>0.970315</td>
+<td>1.720626</td>
+<td>0.744314</td>
+<td>1.057114</td>
+<td>2.805377</td>
+</tr>
+<tr>
+<td>ACM</td>
+<td>1.882538</td>
+<td>1.723419</td>
+<td>1.880968</td>
+<td>0.314417</td>
+<td>0.311965</td>
+<td>0.866007</td>
+<td>0.314417</td>
+<td>0.311965</td>
+<td>0.704292</td>
+</tr>
+<tr>
+<td>ACT</td>
+<td>1.235258</td>
+<td>1.177438</td>
+<td>1.234964</td>
+<td>0.034371</td>
+<td>0.190420</td>
+<td>0.597189</td>
+<td>0.034371</td>
+<td>0.190420</td>
+<td>0.668765</td>
+</tr>
+<tr>
+<td>ACWF</td>
+<td>0.918673</td>
+<td>0.914225</td>
+<td>0.918660</td>
+<td>0.344031</td>
+<td>0.333636</td>
+<td>0.418556</td>
+<td>0.344031</td>
+<td>0.333636</td>
+<td>0.418557</td>
+</tr>
+<tr>
+<td>ACWI</td>
+<td>0.740807</td>
+<td>0.740807</td>
+<td>0.740829</td>
+<td>0.322220</td>
+<td>0.349658</td>
+<td>0.215605</td>
+<td>0.322220</td>
+<td>0.349658</td>
+<td>0.215605</td>
+</tr>
+<tr>
+<td>ACWX</td>
+<td>1.695779</td>
+<td>1.716467</td>
+<td>1.695937</td>
+<td>0.290820</td>
+<td>0.367570</td>
+<td>0.563101</td>
+<td>0.290820</td>
+<td>0.367570</td>
+<td>0.455908</td>
+</tr>
+<tr>
+<td>ADT</td>
+<td>5.984692</td>
+<td>5.984692</td>
+<td>5.980670</td>
+<td>0.100632</td>
+<td>0.413495</td>
+<td>1.361210</td>
+<td>0.100632</td>
+<td>0.413495</td>
+<td>3.932955</td>
+</tr>
+<tr>
+<td>AFT</td>
+<td>1.338696</td>
+<td>1.338696</td>
+<td>1.339173</td>
+<td>0.121234</td>
+<td>0.170364</td>
+<td>0.438779</td>
+<td>0.121234</td>
+<td>0.170364</td>
+<td>0.696588</td>
+</tr>
+<tr>
+<td>AFTY</td>
+<td>4.282447</td>
+<td>3.177647</td>
+<td>4.280923</td>
+<td>0.075920</td>
+<td>0.369955</td>
+<td>1.736157</td>
+<td>0.075920</td>
+<td>0.369955</td>
+<td>0.310241</td>
+</tr>
+<tr>
+<td>AGD</td>
+<td>2.287036</td>
+<td>2.287036</td>
+<td>2.286033</td>
+<td>0.126845</td>
+<td>0.392622</td>
+<td>0.391316</td>
+<td>0.126845</td>
+<td>0.392622</td>
+<td>1.169620</td>
+</tr>
+<tr>
+<td>AGO_P_B</td>
+<td>1.096079</td>
+<td>0.926278</td>
+<td>1.095972</td>
+<td>0.072990</td>
+<td>0.194950</td>
+<td>0.377466</td>
+<td>0.072990</td>
+<td>0.194871</td>
+<td>0.300354</td>
+</tr>
+<tr>
+<td>AHT</td>
+<td>8.060704</td>
+<td>8.060704</td>
+<td>8.060488</td>
+<td>0.640832</td>
+<td>0.628096</td>
+<td>6.894572</td>
+<td>0.640832</td>
+<td>0.628096</td>
+<td>1.592437</td>
+</tr>
+<tr>
+<td>AIEQ</td>
+<td>0.888335</td>
+<td>0.847107</td>
+<td>0.887859</td>
+<td>0.312616</td>
+<td>0.430564</td>
+<td>0.320238</td>
+<td>0.312616</td>
+<td>0.430564</td>
+<td>0.320238</td>
+</tr>
+<tr>
+<td>AIG_WS</td>
+<td>14.980616</td>
+<td>14.980616</td>
+<td>14.974489</td>
+<td>1.016887</td>
+<td>0.898526</td>
+<td>5.080266</td>
+<td>1.016887</td>
+<td>0.898526</td>
+<td>1.443177</td>
+</tr>
+<tr>
+<td>AIRR</td>
+<td>1.498807</td>
+<td>1.498807</td>
+<td>1.499437</td>
+<td>0.103753</td>
+<td>0.353337</td>
+<td>0.694890</td>
+<td>0.103753</td>
+<td>0.353337</td>
+<td>0.798543</td>
+</tr>
+<tr>
+<td>ALKS</td>
+<td>4.509373</td>
+<td>5.871315</td>
+<td>4.503220</td>
+<td>0.536951</td>
+<td>0.627170</td>
+<td>1.043629</td>
+<td>0.536951</td>
+<td>0.627170</td>
+<td>2.875320</td>
+</tr>
+<tr>
+<td>ALL</td>
+<td>2.427588</td>
+<td>2.642671</td>
+<td>2.428550</td>
+<td>0.251199</td>
+<td>0.551264</td>
+<td>1.120698</td>
+<td>0.236938</td>
+<td>0.232596</td>
+<td>0.670975</td>
+</tr>
+<tr>
+<td>ALXN</td>
+<td>4.066937</td>
+<td>4.030956</td>
+<td>4.066387</td>
+<td>0.006286</td>
+<td>0.458300</td>
+<td>1.023300</td>
+<td>0.006286</td>
+<td>0.458300</td>
+<td>1.770219</td>
+</tr>
+<tr>
+<td>AMGN</td>
+<td>3.331021</td>
+<td>3.331021</td>
+<td>3.326690</td>
+<td>0.210962</td>
+<td>0.292862</td>
+<td>0.724205</td>
+<td>0.210962</td>
+<td>0.292862</td>
+<td>1.618411</td>
+</tr>
+<tr>
+<td>AMN</td>
+<td>13.501120</td>
+<td>13.499555</td>
+<td>13.498992</td>
+<td>1.172191</td>
+<td>2.806067</td>
+<td>5.609016</td>
+<td>0.263691</td>
+<td>0.311460</td>
+<td>1.340530</td>
+</tr>
+<tr>
+<td>AMNB</td>
+<td>3.191322</td>
+<td>3.274254</td>
+<td>3.191148</td>
+<td>0.000303</td>
+<td>0.145884</td>
+<td>1.287305</td>
+<td>0.000303</td>
+<td>0.145884</td>
+<td>0.592686</td>
+</tr>
+<tr>
+<td>AMOT</td>
+<td>2.786852</td>
+<td>2.786852</td>
+<td>2.787551</td>
+<td>0.003382</td>
+<td>0.734125</td>
+<td>2.139451</td>
+<td>0.003382</td>
+<td>0.919254</td>
+<td>1.332605</td>
+</tr>
+<tr>
+<td>ANDE</td>
+<td>3.685212</td>
+<td>3.685212</td>
+<td>3.686052</td>
+<td>0.089362</td>
+<td>0.293687</td>
+<td>1.551472</td>
+<td>0.089362</td>
+<td>1.715678</td>
+<td>0.530865</td>
+</tr>
+<tr>
+<td>ANSS</td>
+<td>3.813627</td>
+<td>3.833712</td>
+<td>3.813933</td>
+<td>0.707883</td>
+<td>0.735479</td>
+<td>0.552735</td>
+<td>0.707883</td>
+<td>0.735479</td>
+<td>1.356940</td>
+</tr>
+<tr>
+<td>AOA</td>
+<td>0.673246</td>
+<td>0.742647</td>
+<td>0.674376</td>
+<td>0.238605</td>
+<td>0.254537</td>
+<td>0.269326</td>
+<td>0.238605</td>
+<td>0.254537</td>
+<td>0.269326</td>
+</tr>
+<tr>
+<td>AON</td>
+<td>3.456226</td>
+<td>3.454299</td>
+<td>3.455658</td>
+<td>0.215213</td>
+<td>1.214032</td>
+<td>2.595071</td>
+<td>0.215213</td>
+<td>0.636419</td>
+<td>1.066722</td>
+</tr>
+</tbody>
+</table>
+<h3 id="histogram">Histogram</h3>
+<p>We can do a lot of things with this table, first of which would be plotting all data points on a summary histogram.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">temp</span> <span style="color:#f92672">=</span> <span style="color:#111">l2_norms</span><span style="color:#f92672">.</span><span style="color:#111">stack</span><span style="color:#111">(</span><span style="color:#111">)</span><span style="color:#f92672">.</span><span style="color:#111">reset_index</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">temp</span><span style="color:#f92672">.</span><span style="color:#111">columns</span> <span style="color:#f92672">=</span> <span style="color:#111">[</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">stock</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">regression</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">l2_norm</span><span style="color:#d88200">&#39;</span><span style="color:#111">]</span>
+<span style="color:#111">fig</span> <span style="color:#f92672">=</span> <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">figure</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">ax</span> <span style="color:#f92672">=</span> <span style="color:#111">fig</span><span style="color:#f92672">.</span><span style="color:#111">add_subplot</span><span style="color:#111">(</span><span style="color:#ae81ff">111</span><span style="color:#111">)</span>
+<span style="color:#111">sns</span><span style="color:#f92672">.</span><span style="color:#111">barplot</span><span style="color:#111">(</span><span style="color:#111">x</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">stock</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">y</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">l2_norm</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">hue</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">regression</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">palette</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">Spectral</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">data</span><span style="color:#f92672">=</span><span style="color:#111">temp</span><span style="color:#111">,</span> <span style="color:#111">ax</span><span style="color:#f92672">=</span><span style="color:#111">ax</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">tight_layout</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">show</span><span style="color:#111">(</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img src="/images/robust_comparison/output_48_0.png" alt="picture alt"></p>
+<p>According to the grouped histogram above, in many cases positive Lasso with 1 or 3 non-zero betas are most robust amongst all regression types. More generally, we observe (in robustness) the following order</p>
+<ol>
+<li>Positive Lasso with 1 or 3 non-zero betas</li>
+<li>Regular Lasso with 1 or 3 non-zero betas</li>
+<li>Regular Lasso with 6 non-zero betas</li>
+<li>Positive Lasso with 6 non-zero betas</li>
+<li>Tukey, Huber and OLS are giving visually same robustness</li>
+</ol>
+<p>The last three regression come really similar which is out of our expectation. In contrast, the improvement of Lasso is significant, both without and with restriction of positive betas. We are seeing some improvement of over 90% decreases in L2 norm of beta differences from in-sample to out-of-sample regression, which directly describes the robustness of the underlying regression.</p>
+<h3 id="box-plot">Box Plot</h3>
+<p>In addition to the histogram, we may also drop the individual stocks&rsquo; info and go one step further, by taking a look at the box plots.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">fig</span> <span style="color:#f92672">=</span> <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">figure</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">ax</span> <span style="color:#f92672">=</span> <span style="color:#111">fig</span><span style="color:#f92672">.</span><span style="color:#111">add_subplot</span><span style="color:#111">(</span><span style="color:#ae81ff">111</span><span style="color:#111">)</span>
+<span style="color:#111">sns</span><span style="color:#f92672">.</span><span style="color:#111">boxplot</span><span style="color:#111">(</span><span style="color:#111">x</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">regression</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">y</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">l2_norm</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">ax</span><span style="color:#f92672">=</span><span style="color:#111">ax</span><span style="color:#111">,</span> <span style="color:#111">data</span><span style="color:#f92672">=</span><span style="color:#111">temp</span><span style="color:#111">,</span> <span style="color:#111">palette</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">Spectral</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">tight_layout</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">show</span><span style="color:#111">(</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img src="/images/robust_comparison/output_50_0.png" alt="picture alt"></p>
+<p>Box plot above gives a statistically speaking more summarized view on the overall robustness of the regressions. Now that we&rsquo;ve excluded the idiosyncratic differences in this plot, the regressions robustness order becomes more clear:</p>
+<ol>
+<li>Lasso (both with and without positive beta restriction) with 1 or 3 non-zero betas</li>
+<li>Lasso (both with and without positive beta restriction) with 6 non-zero betas</li>
+<li>OLS, Tukey and Huber</li>
+</ol>
+<p>where the last three are the least robust, both from the dispersion of the L2 norm values and from the greater means (and outliers).</p>
+<p>Talking about outliers, we do notice there&rsquo;re some non-trivial advantage of having fewer non-zero betas: Lasso (both with and without positive beta restriction) with 1 non-zero beta is better than 3 and then 6 in that its outliers are visually smaller and closer to distribution means. While <code>lasso6</code> and <code>poslasso6</code> above are giving &ldquo;extremer&rdquo; extremes, the outliers given by <code>lasso1</code> and <code>poslasso1</code> are just trivial enough for us to make this conclusion.</p>
+<h3 id="dist-plot">Dist Plot</h3>
+<p>Another observation comes from the skewness of the above distributions. One may easily notice that all distributions are skewed toward the same direction: positive. We may get it verified by running skewness tests but rather let us just plot them here.</p>
+<div class="highlight"><div style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#111">g</span> <span style="color:#f92672">=</span> <span style="color:#111">sns</span><span style="color:#f92672">.</span><span style="color:#111">FacetGrid</span><span style="color:#111">(</span><span style="color:#111">temp</span><span style="color:#111">,</span> <span style="color:#111">row</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">regression</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">hue</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">regression</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">aspect</span><span style="color:#f92672">=</span><span style="color:#ae81ff">15</span><span style="color:#111">,</span> <span style="color:#111">height</span><span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#111">,</span> <span style="color:#111">palette</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">ocean</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+<span style="color:#111">g</span><span style="color:#f92672">.</span><span style="color:#111">map</span><span style="color:#111">(</span><span style="color:#111">sns</span><span style="color:#f92672">.</span><span style="color:#111">kdeplot</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">l2_norm</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">clip_on</span><span style="color:#f92672">=</span><span style="color:#111">False</span><span style="color:#111">,</span> <span style="color:#111">shade</span><span style="color:#f92672">=</span><span style="color:#111">True</span><span style="color:#111">,</span> <span style="color:#111">alpha</span><span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#111">,</span> <span style="color:#111">lw</span><span style="color:#f92672">=</span><span style="color:#ae81ff">1.5</span><span style="color:#111">,</span> <span style="color:#111">bw</span><span style="color:#f92672">=</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2</span><span style="color:#111">)</span>
+<span style="color:#111">g</span><span style="color:#f92672">.</span><span style="color:#111">map</span><span style="color:#111">(</span><span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">axhline</span><span style="color:#111">,</span> <span style="color:#111">y</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span><span style="color:#111">,</span> <span style="color:#111">lw</span><span style="color:#f92672">=</span><span style="color:#ae81ff">2</span><span style="color:#111">,</span> <span style="color:#111">clip_on</span><span style="color:#f92672">=</span><span style="color:#111">False</span><span style="color:#111">)</span>
+
+<span style="color:#00a8c8">def</span> <span style="color:#75af00">label</span><span style="color:#111">(</span><span style="color:#111">x</span><span style="color:#111">,</span> <span style="color:#111">color</span><span style="color:#111">,</span> <span style="color:#111">label</span><span style="color:#111">)</span><span style="color:#111">:</span>
+    <span style="color:#111">ax</span> <span style="color:#f92672">=</span> <span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">gca</span><span style="color:#111">(</span><span style="color:#111">)</span>
+    <span style="color:#111">ax</span><span style="color:#f92672">.</span><span style="color:#111">text</span><span style="color:#111">(</span><span style="color:#ae81ff">0</span><span style="color:#111">,</span> <span style="color:#f92672">.</span><span style="color:#ae81ff">2</span><span style="color:#111">,</span> <span style="color:#111">label</span><span style="color:#111">,</span> <span style="color:#111">fontweight</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">normal</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">color</span><span style="color:#f92672">=</span><span style="color:#111">color</span><span style="color:#111">,</span> <span style="color:#111">ha</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">left</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">va</span><span style="color:#f92672">=</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">center</span><span style="color:#d88200">&#39;</span><span style="color:#111">,</span> <span style="color:#111">transform</span><span style="color:#f92672">=</span><span style="color:#111">ax</span><span style="color:#f92672">.</span><span style="color:#111">transAxes</span><span style="color:#111">)</span>
+
+<span style="color:#111">g</span><span style="color:#f92672">.</span><span style="color:#111">map</span><span style="color:#111">(</span><span style="color:#111">label</span><span style="color:#111">,</span> <span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">l2_norm</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+<span style="color:#111">g</span><span style="color:#f92672">.</span><span style="color:#111">fig</span><span style="color:#f92672">.</span><span style="color:#111">subplots_adjust</span><span style="color:#111">(</span><span style="color:#111">hspace</span><span style="color:#f92672">=</span><span style="color:#f92672">-</span><span style="color:#f92672">.</span><span style="color:#ae81ff">25</span><span style="color:#111">)</span>
+<span style="color:#111">g</span><span style="color:#f92672">.</span><span style="color:#111">set_titles</span><span style="color:#111">(</span><span style="color:#d88200"></span><span style="color:#d88200">&#39;</span><span style="color:#d88200">&#39;</span><span style="color:#111">)</span>
+<span style="color:#111">g</span><span style="color:#f92672">.</span><span style="color:#111">set</span><span style="color:#111">(</span><span style="color:#111">yticks</span><span style="color:#f92672">=</span><span style="color:#111">[</span><span style="color:#111">]</span><span style="color:#111">)</span>
+<span style="color:#111">g</span><span style="color:#f92672">.</span><span style="color:#111">despine</span><span style="color:#111">(</span><span style="color:#111">bottom</span><span style="color:#f92672">=</span><span style="color:#111">True</span><span style="color:#111">,</span> <span style="color:#111">left</span><span style="color:#f92672">=</span><span style="color:#111">True</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">tight_layout</span><span style="color:#111">(</span><span style="color:#111">)</span>
+<span style="color:#111">plt</span><span style="color:#f92672">.</span><span style="color:#111">show</span><span style="color:#111">(</span><span style="color:#111">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img src="/images/robust_comparison/output_52_0.png" alt="picture alt"></p>
+<p>The dist plot above coincides with our observation: the right tail is much longer and fatter than left.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        <script src="https://utteranc.es/client.js"
+  repo= "christineeeeee/christineeeeee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+      </footer>
+    </article>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js" id="MathJax-script"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [
+          ['$', '$'], ['\\(', '\\)']
+        ],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+
+</footer>
+
+    </main>
+
+    
+
+  </body>
+
+</html>
