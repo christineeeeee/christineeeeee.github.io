@@ -101,6 +101,10 @@
     <h1 class="title">Posts</h1>
 
     <ul><li>
+  <span class="date">March 16, 2020</span>
+  <a class="title" href="/posts/lockdown-diary/">封锁</a>
+</li>
+<li>
   <span class="date">March 7, 2020</span>
   <a class="title" href="/posts/fib/">5 Ways of Generating Fibonacci Numbers</a>
 </li>
@@ -108,41 +112,51 @@
 
     
 
-
-
-
-
-<ul class="pagination">
-  
+<nav class="pagination">
+<ul class="pagination-list">
     
-    <li><a href="/posts/">&laquo;</a></li>
+    <li>
+        <a href="/posts/" class="pagination-link"  aria-label="First"><span aria-hidden="true">&laquo;&nbsp;</span></a>
+    </li>
     
-    <li class="hidden"><a href="/posts/">&lsaquo;</a></li>
-  
-  
+    <li>
+        <a href="/posts/" class="pagination-link"  aria-label="Previous"><span aria-hidden="true">&lsaquo;&nbsp;</span></a>
+    </li>
     
     
-      
     
     
-      
-      <li><a href="/posts/">1</a></li>
-      
-    
-  
     
     
-      
+    
+        
+        
     
     
-      
-      <li>2</li>
-      
+    <li><a class="pagination-link " href="/posts/">1</a></li>
     
-  
-  
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li><a class="pagination-link is-current" href="/posts/page/2/">2</a></li>
+    
+    
+    <li>
+    <a href="" class="pagination-link" disabled aria-label="Next"><span aria-hidden="true">&nbsp;&rsaquo;</span></a>
+    </li>
+    
+    <li>
+        <a href="/posts/page/2/" class="pagination-link" disabled aria-label="Last"><span aria-hidden="true">&nbsp;&raquo;</span></a>
+    </li>
+    
 </ul>
-
+</nav>
 
   </section>
 

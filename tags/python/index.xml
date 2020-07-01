@@ -21,6 +21,16 @@
     </item>
     
     <item>
+      <title>Robust and Bayesian Regression Comparison</title>
+      <link>https://christineeeeee.com/posts/robust_comparison/</link>
+      <pubDate>Sat, 30 May 2020 02:08:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/robust_comparison/</guid>
+      <description>Robust techniques and variable selection can help us obtain more stable linear fits. In this post, I used return regressions against returns on State Street sctors ETFs to test this fact. By computing out-of-sample regression, I contrast the performance of OLS regression, robust regression(huber and tukey) and positive lasso regressions.
+1 2 3 4 5 6 7 8 9 10 11 12  import os import quandl import pickle import warnings import numpy as np import pandas as pd import seaborn as sns from tqdm.</description>
+    </item>
+    
+    <item>
       <title>Flair - A Pretrained NLP Sentiment Analysis Tool</title>
       <link>https://christineeeeee.com/posts/nlp_sentiment_tool/</link>
       <pubDate>Sun, 10 May 2020 09:20:58 +0000</pubDate>
