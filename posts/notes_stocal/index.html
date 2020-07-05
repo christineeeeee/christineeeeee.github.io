@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Christine">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Notes on Stochastic Calculus"/>
+<meta name="twitter:description" content="Here I put some notes on the stochastic calculus for my future use. Those are some important (but also basic) properties and proofs about topics like moment generating function, martigales and Brownian motion etc. that we should know.
+MGF of Normal Distribution For $X \sim N(\mu, \sigma^2)$, we have MGF($\theta$) = exp($\theta\mu &#43; \theta^2\sigma^2 / 2)$. We have E($X^k$) = $MGF^{(k)}(0)$.
+Truncated Normal Distribution A two-sided truncation $(a, b)$ on $N(\mu, \sigma^2)$, then: $$E[X | a &lt; X &lt; b] = \mu - \sigma \frac{\phi(\alpha) - \phi(\beta)}{\Phi(\alpha) - \Phi(\beta)}$$ where $\alpha: (a - \mu) / \sigma $ and $\beta: (b - \mu)/\sigma$"/>
+
+    <meta property="og:title" content="Notes on Stochastic Calculus" />
+<meta property="og:description" content="Here I put some notes on the stochastic calculus for my future use. Those are some important (but also basic) properties and proofs about topics like moment generating function, martigales and Brownian motion etc. that we should know.
+MGF of Normal Distribution For $X \sim N(\mu, \sigma^2)$, we have MGF($\theta$) = exp($\theta\mu &#43; \theta^2\sigma^2 / 2)$. We have E($X^k$) = $MGF^{(k)}(0)$.
+Truncated Normal Distribution A two-sided truncation $(a, b)$ on $N(\mu, \sigma^2)$, then: $$E[X | a &lt; X &lt; b] = \mu - \sigma \frac{\phi(\alpha) - \phi(\beta)}{\Phi(\alpha) - \Phi(\beta)}$$ where $\alpha: (a - \mu) / \sigma $ and $\beta: (b - \mu)/\sigma$" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://christineeeeee.com/posts/notes_stocal/" />
+<meta property="article:published_time" content="2020-02-25T21:45:00+00:00" />
+<meta property="article:modified_time" content="2020-02-25T21:45:00+00:00" />
+
+
+    
+      <base href="https://christineeeeee.com/posts/notes_stocal/">
+    
+    <title>
+  Notes on Stochastic Calculus · Stop this train
+</title>
+
+    
+      <link rel="canonical" href="https://christineeeeee.com/posts/notes_stocal/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.c6a6f7e4e5b9eae62968f9dee6cad8903a7a12c11df9305249ee05c53679cafe.css" integrity="sha256-xqb35OW56uYpaPne5srYkDp6EsEd&#43;TBSSe4FxTZ5yv4=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+      <link rel="stylesheet" href="/css/custom.css" />
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.63.1" />
+  </head>
+
+  
+  
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Stop this train
+    </a>
+    
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/pieces/">Pieces</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Notes on Stochastic Calculus</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-02-25T21:45:00Z'>
+                February 25, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="/tags/notes/">Notes</a>
+      <span class="separator">•</span>
+    <a href="/tags/math/">Math</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <p>Here I put some notes on the stochastic calculus for my future use. Those are some important (but also basic) properties and proofs about topics like moment generating function, martigales and Brownian motion etc. that we should know.</p>
+<h4 id="mgf-of-normal-distribution">MGF of Normal Distribution</h4>
+<p>For $X \sim N(\mu, \sigma^2)$, we have MGF($\theta$) = exp($\theta\mu + \theta^2\sigma^2 / 2)$. We have E($X^k$) = $MGF^{(k)}(0)$.</p>
+<h4 id="truncated-normal-distribution">Truncated Normal Distribution</h4>
+<p>A two-sided truncation $(a, b)$ on $N(\mu, \sigma^2)$, then:
+$$E[X | a &lt; X &lt; b] = \mu - \sigma \frac{\phi(\alpha) - \phi(\beta)}{\Phi(\alpha) - \Phi(\beta)}$$
+where $\alpha: (a - \mu) / \sigma $ and $\beta: (b - \mu)/\sigma$</p>
+<h4 id="doobs-indentity">Doob&rsquo;s Indentity</h4>
+<p>Let X be a MG and $T$ a stopping time, then E$X_{T \wedge n} = EX_0$ for any n.</p>
+<h4 id="martingale-transform">Martingale Transform</h4>
+<p>Define $(Z \cdot X)$ := $\Sigma_{i=1}^{n} Z_i(X_i - X_{i-1})$ where X is MG with $X_0$ = 0 and $Z_n$ is predictable and bounded, then $(Z \cdot X)$ is MG.</p>
+<p>If X is sub-MG (conditional expectation of future values given all prior values is large than or equal to its current value), then also is $(Z \cdot X)$.</p>
+<p>If Z $\in$ [0, 1], then $E(Z \cdot X) \leq EX$.</p>
+<h4 id="common-martigales-and-the-proofs">Common Martigales and the Proofs</h4>
+<ul>
+<li>
+<p>$S_n:= \Sigma_{i=1}^{n} X_i$ for $X \sim (0, \sigma^2)$. (Symmetric Random Walk)</p>
+</li>
+<li>
+<p>$S_n^2 - n\sigma^2$ for symmetric random walk $S_n$.</p>
+</li>
+</ul>
+<p>Proof:
+$$
+\begin{align}
+E[S_{n+1}^2 - (n+1)] &amp;= E[S_{n+1}^2] - E[(n+1)\sigma^2]\\<br>
+&amp;= \frac{1}{2}(S_n + \sigma)^2 + \frac{1}{2}(S_n - \sigma)^2 - \sigma^2E(n+1)\\<br>
+&amp;= S_n^2 + \sigma^2 - \sigma^2(n+1)\\<br>
+&amp;= S_n^2 - n\sigma^2
+\end{align}
+$$</p>
+<ul>
+<li>$(q/p)^{S_n}$ for assymetric random walk $S_n (P(X = 1) = p, P(X = -1) = q = 1 - p)$</li>
+</ul>
+<p>Proof:
+$$
+\begin{align}
+E[(q/p)^{S_{n+1}}] &amp;= p \cdot (q/p)^{S_{n}+1} + q \cdot (q/p)^{S_{n}-1}\\<br>
+&amp;= (p + q) \cdot (q/p)^{S_{n}}\\<br>
+&amp;= (q/p)^{S_{n}}
+\end{align}
+$$</p>
+<ul>
+<li>$S_n - n(p - q)$ for assymetric random walk $S_n$.</li>
+</ul>
+<p>Proof:
+$$
+\begin{align}
+E[S_{n+1} - (n+1)(p-q)] &amp;= E[S_{n+1}] - (n+1)(p-q)\\<br>
+&amp;= p \cdot (S_n + 1) + q \cdot (S_n - 1) - (n+1)(p-q)\\<br>
+&amp;= (p+q)S_n - n(p-q)
+\end{align}
+$$</p>
+<ul>
+<li>$B_t^2 - t$ for standard Brownian motion $B_t$.</li>
+</ul>
+<p>Proof:</p>
+<p>Since $B_t \sim N(0, t)$, $E[B_t] = 0, Var(B_t) = t, E[B_t^2] = E[B_t]^2 + Var(B_t) = t$.</p>
+<p>Hence, $E[B_t^2 - t]$ = t - t = 0</p>
+<h4 id="gamblers-ruin">Gambler&rsquo;s Ruin</h4>
+<ul>
+<li>Symmetric: for (discrete- or continuous-time) MG $S$ with $S_0=0$, define stopping time $T$ = min{$\tau(-A), \tau(B)$}, then P($S_T = B$) = $\frac{A}{A + B}$, P($\tau(B) &lt; \infty$) = $lim_{A\rightarrow \infty}P(S_T = B)$ = 1 and E$T = AB$.</li>
+</ul>
+<h4 id="first-passage-time-t-taua">First Passage Time $T$:= $\tau(a)$</h4>
+<ul>
+<li>CDF: $P(T\leq t) = 2P(B_t &gt; a) = 2\Phi(-a/\sqrt t).$</li>
+<li>PDF: take the derivative of CDF</li>
+<li>$ET: X_t:= exp(\theta B_t - \theta^2t/2)$ is a MG, we know $E(X_T) = X_0 = 1,$ from which expectation is calculated.</li>
+</ul>
+<h4 id="itos-formula---ut-x_t">Ito&rsquo;s Formula - $u(t, X_t)$</h4>
+<p>Let $X_t$ be an Ito process. Let $u(t,x)$ be a twice-continuously differentiable function with $u$ and its partial derivatives bounded, then,
+$$
+dX_t = \frac{\partial u}{\partial t}(t, X_t) + \frac{\partial u}{\partial x}(t, X_t)dX_t + \frac{1}{2}\frac{\partial^2 u}{\partial x^2}(t, X_t)d[X, X]_t.
+$$</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        <script src="https://utteranc.es/client.js"
+  repo= "christineeeeee/christineeeeee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+      </footer>
+    </article>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js" id="MathJax-script"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [
+          ['$', '$'], ['\\(', '\\)']
+        ],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-171417581-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

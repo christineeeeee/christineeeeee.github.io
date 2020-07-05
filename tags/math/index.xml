@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Math on Stop this train</title>
+    <link>https://christineeeeee.com/tags/math/</link>
+    <description>Recent content in Math on Stop this train</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 25 Feb 2020 21:45:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://christineeeeee.com/tags/math/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Notes on Stochastic Calculus</title>
+      <link>https://christineeeeee.com/posts/notes_stocal/</link>
+      <pubDate>Tue, 25 Feb 2020 21:45:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/notes_stocal/</guid>
+      <description>Here I put some notes on the stochastic calculus for my future use. Those are some important (but also basic) properties and proofs about topics like moment generating function, martigales and Brownian motion etc. that we should know.
+MGF of Normal Distribution For $X \sim N(\mu, \sigma^2)$, we have MGF($\theta$) = exp($\theta\mu + \theta^2\sigma^2 / 2)$. We have E($X^k$) = $MGF^{(k)}(0)$.
+Truncated Normal Distribution A two-sided truncation $(a, b)$ on $N(\mu, \sigma^2)$, then: $$E[X | a &amp;lt; X &amp;lt; b] = \mu - \sigma \frac{\phi(\alpha) - \phi(\beta)}{\Phi(\alpha) - \Phi(\beta)}$$ where $\alpha: (a - \mu) / \sigma $ and $\beta: (b - \mu)/\sigma$</description>
+    </item>
+    
+  </channel>
+</rss>

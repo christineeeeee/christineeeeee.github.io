@@ -168,5 +168,16 @@ We define g and j be our trading thresholds in this strategy. Besides, we also h
 1. Recursion without Cache 1 2 3 4 5  def fib(n): if n &amp;lt;= 2: return n - 1 else: return fib(n - 1) + fib(n - 2)   The time complexity of this function is $O(1.</description>
     </item>
     
+    <item>
+      <title>Notes on Stochastic Calculus</title>
+      <link>https://christineeeeee.com/posts/notes_stocal/</link>
+      <pubDate>Tue, 25 Feb 2020 21:45:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/notes_stocal/</guid>
+      <description>Here I put some notes on the stochastic calculus for my future use. Those are some important (but also basic) properties and proofs about topics like moment generating function, martigales and Brownian motion etc. that we should know.
+MGF of Normal Distribution For $X \sim N(\mu, \sigma^2)$, we have MGF($\theta$) = exp($\theta\mu + \theta^2\sigma^2 / 2)$. We have E($X^k$) = $MGF^{(k)}(0)$.
+Truncated Normal Distribution A two-sided truncation $(a, b)$ on $N(\mu, \sigma^2)$, then: $$E[X | a &amp;lt; X &amp;lt; b] = \mu - \sigma \frac{\phi(\alpha) - \phi(\beta)}{\Phi(\alpha) - \Phi(\beta)}$$ where $\alpha: (a - \mu) / \sigma $ and $\beta: (b - \mu)/\sigma$</description>
+    </item>
+    
   </channel>
 </rss>
