@@ -117,7 +117,7 @@ Truncated Normal Distribution A two-sided truncation $(a, b)$ on $N(\mu, \sigma^
             </span>
             <span class="reading-time">
               <i class="fas fa-clock"></i>
-              3-minute read
+              4-minute read
             </span>
           </div>
           
@@ -194,6 +194,34 @@ $$</p>
 <h4 id="gamblers-ruin">Gambler&rsquo;s Ruin</h4>
 <ul>
 <li>Symmetric: for (discrete- or continuous-time) MG $S$ with $S_0=0$, define stopping time $T$ = min{$\tau(-A), \tau(B)$}, then P($S_T = B$) = $\frac{A}{A + B}$, P($\tau(B) &lt; \infty$) = $lim_{A\rightarrow \infty}P(S_T = B)$ = 1 and E$T = AB$.</li>
+</ul>
+<h4 id="brownian-motion">Brownian Motion</h4>
+<p>A continuous stochastic process $W(t)$, $t \geq 0$, is a Brownian motion if:</p>
+<ul>
+<li>$W(0) = 0$</li>
+<li>The increments of the process $W(t_1) - W(t_0), W(t_2) - W(t_1),&hellip;,W(t_n) - W(t_{n-1}), \forall 0 \leq t_1 \leq t_2 \leq &hellip; \leq t_n$ are independent</li>
+<li>Each of theses increments is normally distributed with distribution $W(t_{i+1}) - W(t_i) \sim N(0, t_{i+1} - t_i)$</li>
+</ul>
+<p>Some properties of Brownian motion:</p>
+<ul>
+<li>E[$W(t)$] = 0 ( Since $W(t) - W(0) \sim N(0, t)$)</li>
+<li>E[$W(t)^2$] = $t$ ( Since $E(W(t)^2) = Var(W(t)) + E(W(t))^2$ = $t + 0$ = $t$)</li>
+<li>Martingale property: E[$W(t + s) | W(t)$] = $W(t)$</li>
+<li>$Cov(W(s), W(t)) = s, \forall 0 &lt; s &lt; t$ ( Since $W(t) = W(s) + W(t) - W(s)$, $cov(W(s), W(t)) = cov(W(s), (W(t) - W(s)) + W(s)) = cov(W(s), W(t) - W(s)) + cov(W(s), W(s))$. Because the increment of Brownian motion is independent, cov(W(s), W(t) - W(s)) = 0. So, cov(W(s), W(t)) = cov(W(s), W(s)) = var(W(s)) = s.)</li>
+</ul>
+<p>Some Brownian motion related martingales:</p>
+<ul>
+<li>$Y(t) = W(t)^2 - t$</li>
+<li>$Z(t)$ = exp($\lambda W(t) - \frac{1}{2} \lambda^2 t$), where $\lambda$ is any constant and $W(t)$ is a Brownian motion. (<strong>exponential martingale</strong>)</li>
+</ul>
+<h4 id="reflection-principle">Reflection Principle</h4>
+<ul>
+<li>
+<p>Version 1: For Brownian motion $B$ and stopping time $T = \tau(a)$, define $B^{\star}$ such that $B_{t}^{\star} = B_t$ for all $t \leq T$ and $B_{t}^{\star} = 2a - B_t$ for all t &gt; T, then $B^{\star}$ is also a Brownian motion.</p>
+</li>
+<li>
+<p>Version 2: Consider a random walk starting at $a$, $S_0 = a$, and reaching $b$ in $n$ steps: $S_n = b$. Denote $N_n(a, b)$ as the number of possible paths from (0, a) to (n, b) and $N_{n}^0(a, b)$ as the number possible paths from $(0, a)$ to $(n, b)$ that at some step $k$ ($k$ &gt; 0), $S_k = 0$; in other words, $N_{n}^{0}(a, b)$ are the paths that contain ($k$, 0), $\exists 0 &lt; k &lt; n$. The reflection principle syas that if $a$, $b$ &gt; 0, then $N_{n}^{0} = N_n(-a, b)$.</p>
+</li>
 </ul>
 <h4 id="first-passage-time-t-taua">First Passage Time $T$:= $\tau(a)$</h4>
 <ul>
