@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Christine">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Notes on Probability and Distribution"/>
+<meta name="twitter:description" content="Here, I take some notes on probability and distribution for the convenience of my future reference.
+Dicrete Random Variables 1. Uniform Distribution  pmf: $P(x) = \frac{1}{b-a&#43;1}$ for x = a, a &#43; 1,&hellip;,b E[$X$]: $\frac{a&#43;b}{2}$ var($X$): $\frac{(b-a&#43;1)^2 - 1}{12}$ meaning: it represents the occurrence of a value between number $a$ and $b$ when all values in the set {a, a&#43;1,&hellip;,b} have equal probability.  2. Binomial Distribution  pmf: $P(x) = {n \choose x} p^{x} (1-p)^{n-x}$ for x = 0, 1,&hellip;,n E[$X$]: $np$ var($X$): $np(1-p)$ meaning: it represents the number of successes in a sequence of $n$ experiments when each trial is independently a success with probability $p$."/>
+
+    <meta property="og:title" content="Notes on Probability and Distribution" />
+<meta property="og:description" content="Here, I take some notes on probability and distribution for the convenience of my future reference.
+Dicrete Random Variables 1. Uniform Distribution  pmf: $P(x) = \frac{1}{b-a&#43;1}$ for x = a, a &#43; 1,&hellip;,b E[$X$]: $\frac{a&#43;b}{2}$ var($X$): $\frac{(b-a&#43;1)^2 - 1}{12}$ meaning: it represents the occurrence of a value between number $a$ and $b$ when all values in the set {a, a&#43;1,&hellip;,b} have equal probability.  2. Binomial Distribution  pmf: $P(x) = {n \choose x} p^{x} (1-p)^{n-x}$ for x = 0, 1,&hellip;,n E[$X$]: $np$ var($X$): $np(1-p)$ meaning: it represents the number of successes in a sequence of $n$ experiments when each trial is independently a success with probability $p$." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://christineeeeee.com/posts/notes_prob/" />
+<meta property="article:published_time" content="2019-05-22T12:02:00+00:00" />
+<meta property="article:modified_time" content="2019-05-22T12:02:00+00:00" />
+
+
+    
+      <base href="https://christineeeeee.com/posts/notes_prob/">
+    
+    <title>
+  Notes on Probability and Distribution · Stop this train
+</title>
+
+    
+      <link rel="canonical" href="https://christineeeeee.com/posts/notes_prob/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.c6a6f7e4e5b9eae62968f9dee6cad8903a7a12c11df9305249ee05c53679cafe.css" integrity="sha256-xqb35OW56uYpaPne5srYkDp6EsEd&#43;TBSSe4FxTZ5yv4=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+      <link rel="stylesheet" href="/css/custom.css" />
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.63.1" />
+  </head>
+
+  
+  
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Stop this train
+    </a>
+    
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/pieces/">Pieces</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Notes on Probability and Distribution</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2019-05-22T12:02:00Z'>
+                May 22, 2019
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              2-minute read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="/tags/notes/">Notes</a>
+      <span class="separator">•</span>
+    <a href="/tags/math/">Math</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <p>Here, I take some notes on probability and distribution for the convenience of my future reference.</p>
+<h4 id="dicrete-random-variables">Dicrete Random Variables</h4>
+<h5 id="1-uniform-distribution">1. Uniform Distribution</h5>
+<ul>
+<li>pmf: $P(x) = \frac{1}{b-a+1}$ for x = a, a + 1,&hellip;,b</li>
+<li>E[$X$]: $\frac{a+b}{2}$</li>
+<li>var($X$): $\frac{(b-a+1)^2 - 1}{12}$</li>
+<li>meaning: it represents the occurrence of a value between number $a$ and $b$ when all values in the set {a, a+1,&hellip;,b} have equal probability.</li>
+</ul>
+<h5 id="2-binomial-distribution">2. Binomial Distribution</h5>
+<ul>
+<li>pmf: $P(x) = {n \choose x} p^{x} (1-p)^{n-x}$ for x = 0, 1,&hellip;,n</li>
+<li>E[$X$]: $np$</li>
+<li>var($X$): $np(1-p)$</li>
+<li>meaning: it represents the number of successes in a sequence of $n$ experiments when each trial is independently a success with probability $p$.</li>
+</ul>
+<h5 id="3-poisson-distribution">3. Poisson Distribution</h5>
+<ul>
+<li>pmf: $P(x) = \frac{e^{-\lambda t}(\lambda t)^{x}}{x!}$ for x = 0, 1,&hellip;,n</li>
+<li>E[$X$]: $\lambda t$</li>
+<li>var($X$): $\lambda t$</li>
+<li>meaning: it represents the number of events occurring in a fixed period of time with the expected number of occurrences $\lambda t$ when events occur with a known average rate $\lambda$.</li>
+</ul>
+<h5 id="4-geometric-distribution">4. Geometric Distribution</h5>
+<ul>
+<li>pmf: $P(x) = (1-p)^{x-1} p$ for x = 1,2,&hellip;,n</li>
+<li>E[$X$]: $\frac{1}{p}$</li>
+<li>var($X$): $\frac{1-p}{p^2}$</li>
+<li>meaning: it represents the trial number to get the first success when each trial is independently a success with probability $p$.</li>
+</ul>
+<h5 id="5-negative-binomial-distribution">5. Negative Binomial Distribution</h5>
+<ul>
+<li>pmf: $P(x) = {x-1 \choose r-1} p^{r} (1-p)^{x-r}$ for x = r, r+1,&hellip;</li>
+<li>E[$X$]: $\frac{r}{p}$</li>
+<li>var($X$): $\frac{r(1-p)}{p^2}$</li>
+<li>meaning: it represents the trial number to get the r-th success when each trial is independently a success with probability $p$.</li>
+</ul>
+<h4 id="continuous-random-variables">Continuous Random Variables</h4>
+<h5 id="1-uniform-distribution-1">1. Uniform Distribution</h5>
+<ul>
+<li>pdf: $P(x) = \frac{1}{b-a}$ for $a \leq x \leq b$</li>
+<li>E[$X$]: $\frac{a+b}{2}$</li>
+<li>var($X$): $\frac{(b-a+1)^2 - 1}{12}$</li>
+<li>meaning: it represents a random variable uniformly distributed over the interval [a, b]</li>
+</ul>
+<h5 id="2-normal-distribution">2. Normal Distribution</h5>
+<ul>
+<li>pdf: $P(x) = \frac{1}{\sqrt{2\pi} \sigma} \cdot e^{\frac{-(x-\mu)^2}{2\sigma^2}}$ for $a \leq x \leq b$</li>
+<li>E[$X$]: $\mu$</li>
+<li>var($X$): $\sigma^2$</li>
+</ul>
+<h5 id="3-exponential-distribution">3. Exponential Distribution</h5>
+<ul>
+<li>pdf: $P(x) = \lambda e^{-\lambda x}$ for $x \geq 0$</li>
+<li>E[$X$]: $\frac{1}{\lambda}$</li>
+<li>var($X$): $\frac{1}{\lambda^2}$</li>
+<li>meaning: it represents the arrival time of an event if it has a constant arrival rate $\lambda$.</li>
+</ul>
+<h5 id="4-gamma-distribution">4. Gamma Distribution</h5>
+<ul>
+<li>pdf: $P(x) = \frac{\lambda e^{-\lambda x}(\lambda x)^{\alpha -1}}{\Gamma(\alpha)}$ for $x \geq 0$, $\Gamma(\alpha) = \int_{0}^{\infty} e^{-y} y^{\alpha -1}$</li>
+<li>E[$X$]: $\frac{\alpha}{\lambda}$</li>
+<li>var($X$): $\frac{\alpha}{\lambda^2}$</li>
+<li>meaning: it represents the amount of time one has to wait until a total of $n$ events occur.</li>
+</ul>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        <script src="https://utteranc.es/client.js"
+  repo= "christineeeeee/christineeeeee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+      </footer>
+    </article>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js" id="MathJax-script"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [
+          ['$', '$'], ['\\(', '\\)']
+        ],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-171417581-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

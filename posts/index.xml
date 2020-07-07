@@ -179,5 +179,15 @@ MGF of Normal Distribution For $X \sim N(\mu, \sigma^2)$, we have MGF($\theta$) 
 Truncated Normal Distribution A two-sided truncation $(a, b)$ on $N(\mu, \sigma^2)$, then: $$E[X | a &amp;lt; X &amp;lt; b] = \mu - \sigma \frac{\phi(\alpha) - \phi(\beta)}{\Phi(\alpha) - \Phi(\beta)}$$ where $\alpha: (a - \mu) / \sigma $ and $\beta: (b - \mu)/\sigma$</description>
     </item>
     
+    <item>
+      <title>Notes on Probability and Distribution</title>
+      <link>https://christineeeeee.com/posts/notes_prob/</link>
+      <pubDate>Wed, 22 May 2019 12:02:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/notes_prob/</guid>
+      <description>Here, I take some notes on probability and distribution for the convenience of my future reference.
+Dicrete Random Variables 1. Uniform Distribution  pmf: $P(x) = \frac{1}{b-a+1}$ for x = a, a + 1,&amp;hellip;,b E[$X$]: $\frac{a+b}{2}$ var($X$): $\frac{(b-a+1)^2 - 1}{12}$ meaning: it represents the occurrence of a value between number $a$ and $b$ when all values in the set {a, a+1,&amp;hellip;,b} have equal probability.  2. Binomial Distribution  pmf: $P(x) = {n \choose x} p^{x} (1-p)^{n-x}$ for x = 0, 1,&amp;hellip;,n E[$X$]: $np$ var($X$): $np(1-p)$ meaning: it represents the number of successes in a sequence of $n$ experiments when each trial is independently a success with probability $p$.</description>
+    </item>
+    
   </channel>
 </rss>
