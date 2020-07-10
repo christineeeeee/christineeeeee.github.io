@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Christine">
+    
+    
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Numerical Methods(1) - Binomial Model"/>
+<meta name="twitter:description" content="This &ldquo;Numerical Methods&rdquo; series will be my notes on different kinds of useful numerical methods that are used in the industry. Binomial tree model will be the first one to introduce.
+Introduction To build a basic binomial tree, instead of building an N-period model, just let N=3. So the following&rsquo;s a 3-period model with a bank account $B_t = e^{rt}$ and a stock $S$ with dynamics. About the notation of this model, the superscript represents the stock price and the subscript $t_n = n\Delta t$ for $n = 0, 1,&hellip;,N$."/>
+
+    <meta property="og:title" content="Numerical Methods(1) - Binomial Model" />
+<meta property="og:description" content="This &ldquo;Numerical Methods&rdquo; series will be my notes on different kinds of useful numerical methods that are used in the industry. Binomial tree model will be the first one to introduce.
+Introduction To build a basic binomial tree, instead of building an N-period model, just let N=3. So the following&rsquo;s a 3-period model with a bank account $B_t = e^{rt}$ and a stock $S$ with dynamics. About the notation of this model, the superscript represents the stock price and the subscript $t_n = n\Delta t$ for $n = 0, 1,&hellip;,N$." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://christineeeeee.com/posts/binomial_model/" />
+<meta property="article:published_time" content="2020-01-13T14:03:00+00:00" />
+<meta property="article:modified_time" content="2020-01-13T14:03:00+00:00" />
+
+
+    
+      <base href="https://christineeeeee.com/posts/binomial_model/">
+    
+    <title>
+  Numerical Methods(1) - Binomial Model · Stop this train
+</title>
+
+    
+      <link rel="canonical" href="https://christineeeeee.com/posts/binomial_model/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.c6a6f7e4e5b9eae62968f9dee6cad8903a7a12c11df9305249ee05c53679cafe.css" integrity="sha256-xqb35OW56uYpaPne5srYkDp6EsEd&#43;TBSSe4FxTZ5yv4=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+      <link rel="stylesheet" href="/css/custom.css" />
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://christineeeeee.com/images/avatar.jpg" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.63.1" />
+  </head>
+
+  
+  
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Stop this train
+    </a>
+    
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/posts/">Posts</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/pieces/">Pieces</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://christineeeeee.com/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Numerical Methods(1) - Binomial Model</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-01-13T14:03:00Z'>
+                January 13, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="/tags/notes/">Notes</a>
+      <span class="separator">•</span>
+    <a href="/tags/math/">Math</a>
+      <span class="separator">•</span>
+    <a href="/tags/numerical-methods/">Numerical Methods</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <p>This &ldquo;Numerical Methods&rdquo; series will be my notes on different kinds of useful numerical methods that are used in the industry. Binomial tree model will be the first one to introduce.</p>
+<h5 id="introduction">Introduction</h5>
+<p>To build a basic binomial tree, instead of building an N-period model, just let N=3. So the following&rsquo;s a 3-period model with a bank account $B_t = e^{rt}$ and a stock $S$ with dynamics. About the notation of this model, the superscript represents the stock price and the subscript $t_n = n\Delta t$ for $n = 0, 1,&hellip;,N$.</p>
+<p><img src="/images/binomial_model/binomial_tree.png" alt="picture alt"></p>
+<p>Since we want to use the binomial model to find time-0 price $C_0^{0}$ of some option, based on the model of the stock $S$, we could also build a binomial model for option price $C$ as follows.</p>
+<p><img src="/images/binomial_model/option_binomial.png" alt="picture alt"></p>
+<p>We could use the binomial model to price three kinds of options. They are: European option, up-and-out barrier option and American option.</p>
+<h5 id="pricing-an-european-option-by-binomial-model">Pricing an European Option by Binomial Model</h5>
+<p>If we set $T = t_N$ to be the expiry date of the European option and $f(S)$ to be the payoff function, then for all $j$, the option price is $C_{N}^{j} = f(S_{t_N}^{j})$.</p>
+<p>The essence of binomial model is the <strong>backward induction</strong>. After knowing $C_{n+1}^{j}$, by inducting backwards, we could calculate every node of the binomial tree model. For each ($j, n$),
+$$
+C_{n}^{j} = e^{-r\Delta t}[p_{n}^{j}C_{n+1}^{j+1} + (1 - p_{n}^{j})C_{n+1}^{j-1}]
+$$
+where the up-probability is
+$$
+p_{n}^{j} = \frac{S_{t_n}^{j}e^{r\Delta t} - S_{t_{n+1}}^{j-1}}{S_{t_{n+1}}^{j+1}-S_{t_{n+1}}^{j-1}}
+$$</p>
+<h5 id="pricing-an-up-and-out-barrier-option-by-binomial-model">Pricing an Up-and-out Barrier Option by Binomial Model</h5>
+<p>An up-and-out barrier put option on $S$ with strike $K$, expiry $T$ and barrier $H$ pays
+$$
+(K - S_T)^{+} \mathbb{1}{max_{t\in \tau} S_t &lt; H}
+$$
+where $\tau \subseteq [0, T]$ are the ovservation times, specified in the contract. The option price is a functino of three state variables:
+$$
+C(S_{t_n}^{j}, t_n, \mathbb{1})
+$$
+where the indicator functino is about if the price is knockout prior to time $t_n$ and &ldquo;knockout prior to time $t_n$&rdquo; is the event that there exists $t &lt; t_n$ with $t \in \tau$ and $S_t \geq H$. So for the problem, we actuallly only track $C_{n}^{j}:= C(S_{t_n}^{j}, t_n, 0)$.</p>
+<p>The payoff function of the up-and-out barrier option $C_{N}^{j} = (K - S_{t_N}^{j})^{+} \mathbb{1}{S_{t_N}^{j} &lt; H \ or \ t_N \notin \tau }$. By inducting backwards, knowing $C_{n+1}^{j}$, for all node ($j, n$) we have two cases:
+$$
+t_n \in \tau \ and \ S_{t_n}^{j}\geq H,
+$$
+in this case, $C_{n}^{j} = 0$, and
+$$
+t_n \notin \tau \ or \ S_{t_n}^{j} &lt; H,
+$$
+in this case, $C_{n}^{j} = e^{-r\Delta t}[p_{n}^{j}C_{n+1}^{j+1} + (1 - p_{n}^{j})C_{n+1}^{j-1}]$.</p>
+<p>To sum up, everywhere at or beyond the barrier at monitoring times, set the price to 0; elsewhere, take the usual discounted average of the next-time-step values.</p>
+<h5 id="pricing-an-american-option-by-binomial-model">Pricing an American Option by Binomial Model</h5>
+<p>If we set $T = t_N$ to be the expiry date of the American option and the payoff function, then for all $j$, the option price is $C_{N}^{j} = (K - S_{t_N}^{j})^{+}$. By inducting backwards, since we&rsquo;ve known $C_{n+1}^{j}$, for each j:
+$$
+C_{n}^{j} = max((K - S_{t_n}^{j})^{+}, e^{-r\Delta t}[p_{n}^{j}C_{n+1}^{j+1} + (1 - p_{n}^{j})C_{n+1}^{j-1}])
+$$
+To explain, the holder at node ($j, n$) can either excercise and receive $(K - S_{t_n}^{j})^{+}$, or hold on to the option which tomorrow will have no-arbitrage price of $C_{n+1}^{j+1}$(if up) or $C_{n+1}^{j-1}$(if down), which implis:</p>
+<ul>
+<li>if $C_{n}^{j} &lt;$ max, then there&rsquo;s arbitrage: go long the option.</li>
+<li>if $C_{n}^{j} &gt;$ max, then there&rsquo;s arbitrage: short the option; if holer exercises, you close out with a profit; if not, then use the funds to buy a portfolio that superreplicates the time-$t_{n+1}$ option value.</li>
+</ul>
+<p>The time-0 option price is $C_{0}^{0}$.</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        <script src="https://utteranc.es/client.js"
+  repo= "christineeeeee/christineeeeee.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+      </footer>
+    </article>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js" id="MathJax-script"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [
+          ['$', '$'], ['\\(', '\\)']
+        ],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-171417581-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>
