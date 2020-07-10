@@ -196,7 +196,7 @@ Truncated Normal Distribution A two-sided truncation $(a, b)$ on $N(\mu, \sigma^
       <pubDate>Mon, 13 Jan 2020 14:03:00 +0000</pubDate>
       
       <guid>https://christineeeeee.com/posts/binomial_model/</guid>
-      <description>This &amp;ldquo;Numerical Methods&amp;rdquo; series will be my notes on different kinds of useful numerical methods that are used in the industry. Binomial tree model will be the first one to introduce.
+      <description>This &amp;ldquo;Numerical Methods&amp;rdquo; series will be my notes on different kinds of useful numerical methods that are still frequently used in the industry. Binomial tree model will be the first one to be introduced.
 Introduction To build a basic binomial tree, instead of building an N-period model, just let N=3. So the following&amp;rsquo;s a 3-period model with a bank account $B_t = e^{rt}$ and a stock $S$ with dynamics. About the notation of this model, the superscript represents the stock price and the subscript $t_n = n\Delta t$ for $n = 0, 1,&amp;hellip;,N$.</description>
     </item>
     
