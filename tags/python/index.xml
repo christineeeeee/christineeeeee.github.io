@@ -6,10 +6,21 @@
     <description>Recent content in Python on Stop this train</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 05 Jun 2020 18:08:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 15 Jun 2020 11:29:00 +0000</lastBuildDate>
     
 	<atom:link href="https://christineeeeee.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Notes on HDF5 Computation in Python (Updating)</title>
+      <link>https://christineeeeee.com/posts/hdf5_intro/</link>
+      <pubDate>Mon, 15 Jun 2020 11:29:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/hdf5_intro/</guid>
+      <description>Introduction This post is my personal notes on the application of HDF5 in Python.
+As we all know, an HDF5 file contains two kinds of objects: groups and datasets. Groups are folder-like containers which hold all the datasets. Every HDF5 file is a root group and its name is &amp;lsquo;/&#39;. Datasets are arry-like containers of data.
+As for datasets, every dataset could be split into two parts: raw data values and metadata.</description>
+    </item>
     
     <item>
       <title>Twitter Sentiment Strategy</title>
