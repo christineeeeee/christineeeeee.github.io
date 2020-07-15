@@ -6,10 +6,28 @@
     <description>Recent content in Tags on Stop this train</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 02 Jul 2020 14:46:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 15 Jul 2020 13:56:00 +0000</lastBuildDate>
     
 	<atom:link href="https://christineeeeee.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Math</title>
+      <link>https://christineeeeee.com/tags/math/</link>
+      <pubDate>Wed, 15 Jul 2020 13:56:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/tags/math/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Notes</title>
+      <link>https://christineeeeee.com/tags/notes/</link>
+      <pubDate>Wed, 15 Jul 2020 13:56:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/tags/notes/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Thoughts</title>
@@ -17,15 +35,6 @@
       <pubDate>Thu, 02 Jul 2020 14:46:00 +0000</pubDate>
       
       <guid>https://christineeeeee.com/tags/thoughts/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Notes</title>
-      <link>https://christineeeeee.com/tags/notes/</link>
-      <pubDate>Mon, 15 Jun 2020 11:29:00 +0000</pubDate>
-      
-      <guid>https://christineeeeee.com/tags/notes/</guid>
       <description></description>
     </item>
     
@@ -80,15 +89,6 @@
       <pubDate>Sat, 07 Mar 2020 01:24:15 +0000</pubDate>
       
       <guid>https://christineeeeee.com/tags/algorithms/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Math</title>
-      <link>https://christineeeeee.com/tags/math/</link>
-      <pubDate>Tue, 25 Feb 2020 21:45:00 +0000</pubDate>
-      
-      <guid>https://christineeeeee.com/tags/math/</guid>
       <description></description>
     </item>
     

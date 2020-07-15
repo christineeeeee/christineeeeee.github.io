@@ -6,10 +6,20 @@
     <description>Recent content in Notes on Stop this train</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 15 Jun 2020 11:29:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 15 Jul 2020 13:56:00 +0000</lastBuildDate>
     
 	<atom:link href="https://christineeeeee.com/tags/notes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Monty Hall Problem</title>
+      <link>https://christineeeeee.com/posts/monty_hall/</link>
+      <pubDate>Wed, 15 Jul 2020 13:56:00 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/monty_hall/</guid>
+      <description>Monty Hall Problem is a classic probability puzzle based on an American show called $Let&amp;rsquo;s \ Make \ a \ Deal$. While it brings joy to the audience, it also keeps torturing math students and people wanted to have a future in this field (just kidding). In this post, I summarized the classic Monty Hall Problem and some of its variants.
+Classic Monty Hall Problem Let&amp;rsquo;s assume you&amp;rsquo;re the participant of the show and you&amp;rsquo;re standing before 3 doors which look exactly like the others.</description>
+    </item>
     
     <item>
       <title>Notes on HDF5 Computation in Python (Updating)</title>
