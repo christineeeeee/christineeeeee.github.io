@@ -71,18 +71,6 @@ Flair&amp;rsquo;s mechanism is simple. It contains a powerful library which allo
     </item>
     
     <item>
-      <title>Return Predictions From Trade Flow</title>
-      <link>https://christineeeeee.com/posts/trade_flow/</link>
-      <pubDate>Sat, 25 Apr 2020 13:24:30 +0000</pubDate>
-      
-      <guid>https://christineeeeee.com/posts/trade_flow/</guid>
-      <description>This is a strategy which is based on tick level analysis. The idea is that we use trade flow as our signals of the market to generate profit opportunities.
-We define j as our trading threshold. Also, we need to decide proper $\tau$ as the backward trade interval and T as the forward trade interval.
-1. Introduction Breif intro of the strategy.
-Order Book and Trade Marking In the order book, there&amp;rsquo;re two types of trades: bid and ask.</description>
-    </item>
-    
-    <item>
       <title>Quantile Trading</title>
       <link>https://christineeeeee.com/posts/hw4_christine-li/</link>
       <pubDate>Wed, 15 Apr 2020 12:45:00 +0000</pubDate>
