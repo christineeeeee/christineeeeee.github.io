@@ -18,7 +18,7 @@
       
       <guid>https://christineeeeee.com/posts/allen_idiot/</guid>
       <description>A classic probability problem: repeatedly toss a coin until consecutive pattern HTHT shows up, what&amp;rsquo;s the expected number of tosses?
-The normal solution to this problem is to use markov chains to calculate the expected time of the pattern to show up. However, there&amp;rsquo;s another more efficient way. This way was first came out in 1980 by Shuo-Yen Robert Li in his paper A Martigale Approach to the Study of Occurrence of Sequence Patterns in Repeated Experiments.</description>
+ The normal solution to this problem is to use markov chains to calculate the expected time of the pattern to show up. However, there&amp;rsquo;s another more efficient way. This way was first came out in 1980 by Shuo-Yen Robert Li in his paper A Martigale Approach to the Study of Occurrence of Sequence Patterns in Repeated Experiments.</description>
     </item>
     
     <item>
