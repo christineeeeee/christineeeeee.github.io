@@ -3,12 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://christineeeeee.com/newsletter/</loc>
-    <lastmod>2020-08-18T14:18:00+00:00</lastmod>
+    <loc>https://christineeeeee.com/pieces/</loc>
+    <lastmod>2020-08-27T15:34:24+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://christineeeeee.com/</loc>
+    <lastmod>2020-08-27T15:34:24+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/pieces/aug2020/</loc>
+    <lastmod>2020-08-27T15:34:24+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/newsletter/</loc>
     <lastmod>2020-08-18T14:18:00+00:00</lastmod>
   </url>
   
@@ -28,8 +38,23 @@
   </url>
   
   <url>
-    <loc>https://christineeeeee.com/pieces/</loc>
-    <lastmod>2020-07-29T15:34:24+00:00</lastmod>
+    <loc>https://christineeeeee.com/posts/allen_idiot/</loc>
+    <lastmod>2020-08-02T22:36:15+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/tags/math/</loc>
+    <lastmod>2020-08-02T22:36:15+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/posts/</loc>
+    <lastmod>2020-08-02T22:36:15+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/tags/</loc>
+    <lastmod>2020-08-02T22:36:15+00:00</lastmod>
   </url>
   
   <url>
@@ -53,27 +78,12 @@
   </url>
   
   <url>
-    <loc>https://christineeeeee.com/tags/math/</loc>
-    <lastmod>2020-07-15T13:56:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://christineeeeee.com/posts/monty_hall/</loc>
     <lastmod>2020-07-15T13:56:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://christineeeeee.com/tags/notes/</loc>
-    <lastmod>2020-07-15T13:56:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://christineeeeee.com/posts/</loc>
-    <lastmod>2020-07-15T13:56:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://christineeeeee.com/tags/</loc>
     <lastmod>2020-07-15T13:56:00+00:00</lastmod>
   </url>
   

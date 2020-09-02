@@ -6,10 +6,20 @@
     <description>Recent content on Stop this train</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 18 Aug 2020 14:18:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 27 Aug 2020 15:34:24 +0000</lastBuildDate>
     
 	<atom:link href="https://christineeeeee.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>八月我守口如瓶,八月里我是瓶中的水,你是青天的云</title>
+      <link>https://christineeeeee.com/pieces/aug2020/</link>
+      <pubDate>Thu, 27 Aug 2020 15:34:24 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/pieces/aug2020/</guid>
+      <description>2020-08-27
+面完试之后，先是跑去厕所尿了尿，然后卸了妆。极度兴奋的情绪没怎么过去，在家里站着、走着、跳着，在床上翻着滚着，大概就这样过去了一个小时，突然像是木偶被抽掉了丝，整个人瘫在床上一动也不想动。感受到了一种久违的悲伤的情绪，然后就鼻酸了，眼泪流了下来。倒不是因为面得不好才会哭，只是这几个月的摸爬滚打让我感受到了生存的难。太难了。男朋友在座位上回头看我一脸惊讶，听闻我是因为心疼自己哭，笑得很开心。</description>
+    </item>
     
     <item>
       <title>Week 08/17/2020 - 08/23/2020</title>
@@ -36,6 +46,16 @@
       
       <guid>https://christineeeeee.com/newsletter/newsletter_200803-200809/</guid>
       <description>Monday Aug.3rd, 2020  Chinses government and citizens attacked both U.S. government and ByteDance. The Communist Party accused the force sale of &amp;ldquo;hunting and looting&amp;rdquo; of TikTok. Chinese social users accused ByteDance of ceasing to fight with U.S. Government. Google announced to buy 6.6% stake in home security companyADT for $450 million. ADT will assure the installation and maintenance of Google&amp;rsquo;s Nest line of home security devices. Also, Google will promote a trio of new Pixel smartphones.</description>
+    </item>
+    
+    <item>
+      <title>Martingale Approach to Achieve Certain Occurrence of Sequence Patterns</title>
+      <link>https://christineeeeee.com/posts/allen_idiot/</link>
+      <pubDate>Sun, 02 Aug 2020 22:36:15 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/allen_idiot/</guid>
+      <description>A classic probability problem: repeatedly toss a coin until consecutive pattern HTHT shows up, what&amp;rsquo;s the expected number of tosses?
+The normal solution to this problem is to use markov chains to calculate the expected time of the pattern to show up. However, there&amp;rsquo;s another more efficient way. This way was first came out in 1980 by Shuo-Yen Robert Li in his paper A Martigale Approach to the Study of Occurrence of Sequence Patterns in Repeated Experiments.</description>
     </item>
     
     <item>
