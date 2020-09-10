@@ -3,23 +3,33 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://christineeeeee.com/pieces/</loc>
-    <lastmod>2020-08-27T15:34:24+00:00</lastmod>
+    <loc>https://christineeeeee.com/newsletter/</loc>
+    <lastmod>2020-08-30T12:18:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://christineeeeee.com/</loc>
+    <lastmod>2020-08-30T12:18:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/newsletter/newsletter_200824-200830/</loc>
+    <lastmod>2020-08-30T12:18:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/newsletter/newsletter_200831-200906/</loc>
+    <lastmod>2020-08-30T12:18:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/pieces/</loc>
     <lastmod>2020-08-27T15:34:24+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://christineeeeee.com/pieces/aug2020/</loc>
     <lastmod>2020-08-27T15:34:24+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://christineeeeee.com/newsletter/</loc>
-    <lastmod>2020-08-18T14:18:00+00:00</lastmod>
   </url>
   
   <url>
@@ -38,7 +48,7 @@
   </url>
   
   <url>
-    <loc>https://christineeeeee.com/posts/allen_idiot/</loc>
+    <loc>https://christineeeeee.com/posts/martingale_coin_toss/</loc>
     <lastmod>2020-08-02T22:36:15+00:00</lastmod>
   </url>
   
@@ -95,6 +105,11 @@
   <url>
     <loc>https://christineeeeee.com/posts/far_away/</loc>
     <lastmod>2020-07-02T14:46:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://christineeeeee.com/posts/princess_behind_door/</loc>
+    <lastmod>2020-06-27T10:25:26+00:00</lastmod>
   </url>
   
   <url>

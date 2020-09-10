@@ -13,10 +13,10 @@
     
     <item>
       <title>Martingale Approach to Achieve Certain Occurrence of Sequence Patterns</title>
-      <link>https://christineeeeee.com/posts/allen_idiot/</link>
+      <link>https://christineeeeee.com/posts/martingale_coin_toss/</link>
       <pubDate>Sun, 02 Aug 2020 22:36:15 +0000</pubDate>
       
-      <guid>https://christineeeeee.com/posts/allen_idiot/</guid>
+      <guid>https://christineeeeee.com/posts/martingale_coin_toss/</guid>
       <description>A classic probability problem: repeatedly toss a coin until consecutive pattern HTHT shows up, what&amp;rsquo;s the expected number of tosses?
  The normal solution to this problem is to use markov chains to calculate the expected time of the pattern to show up. However, there&amp;rsquo;s another more efficient way. This way was first came out in 1980 by Shuo-Yen Robert Li in his paper A Martigale Approach to the Study of Occurrence of Sequence Patterns in Repeated Experiments.</description>
     </item>
@@ -29,6 +29,15 @@
       <guid>https://christineeeeee.com/posts/monty_hall/</guid>
       <description>Monty Hall Problem is a classic probability puzzle based on an American show called $Let&amp;rsquo;s \ Make \ a \ Deal$. While it brings joy to the audience, it also keeps torturing math students and people wanted to have a future in this field (just kidding). In this post, I summarized the classic Monty Hall Problem and some of its variants.
 Classic Monty Hall Problem Let&amp;rsquo;s assume you&amp;rsquo;re the participant of the show and you&amp;rsquo;re standing before 3 doors which look exactly like the others.</description>
+    </item>
+    
+    <item>
+      <title>Catch the Princess if You Can</title>
+      <link>https://christineeeeee.com/posts/princess_behind_door/</link>
+      <pubDate>Sat, 27 Jun 2020 10:25:26 +0000</pubDate>
+      
+      <guid>https://christineeeeee.com/posts/princess_behind_door/</guid>
+      <description>There&amp;rsquo;s a prince who&amp;rsquo;s madly in love with a lovely princess who lives in a tremendously big castle where there&amp;rsquo;re 7 bedrooms. Each bedroom in the castle has doors connecting tothe adjoining bedrooms. The princess sleeps in a different bedroom every night by opening the door to an adjoining bedroom. There&amp;rsquo;s no restriction on the direction of princess&amp;rsquo;s movement. As long as she sleeps in different bedrooms every night, she&amp;rsquo;s good.</description>
     </item>
     
     <item>
