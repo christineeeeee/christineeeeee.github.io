@@ -1,4 +1,33 @@
-<!-- Start of Async Drift Code -->
+<div>
+    <meta name="theme-color" content="#d9ccbf">
+    <meta name="viewport" content="initial-scale=1, viewport-fit=cover, width=device-width"></meta>
+    <meta name="apple-mobile-web-app-capable" content="yes"></meta>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"></meta>
+</div>
+
+<style scoped>
+@supports(padding:max(0px)) {
+  html {
+    min-height: calc(100% + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    background-attachment: fixed;
+    background-image: url('sakura.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+</style>
+ 
+<script>
+function preventBehavior(e) {
+  e.preventDefault(); 
+};
+
+document.addEventListener("touchmove", preventBehavior, {passive: false});
+</script>
+
+
 <script>
 "use strict";
 
@@ -25,4 +54,3 @@
 drift.SNIPPET_VERSION = '0.3.1';
 drift.load('fvthyr5anfii');
 </script>
-<!-- End of Async Drift Code -->
