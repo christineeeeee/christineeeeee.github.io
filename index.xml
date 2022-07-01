@@ -17,8 +17,7 @@
       <pubDate>Thu, 30 Jun 2022 19:56:00 +0000</pubDate>
       
       <guid>https://christineeeeee.com/posts/anonymous-inbox-for-hugo-blog/</guid>
-      <description>Test.
- &#34;use strict&#34;; !function() { var t = window.driftt = window.drift = window.driftt || []; if (!t.init) { if (t.invoked) return void (window.console &amp;&amp; console.error &amp;&amp; console.error(&#34;Drift snippet included twice.&#34;)); t.invoked = !0, t.methods = [ &#34;identify&#34;, &#34;config&#34;, &#34;track&#34;, &#34;reset&#34;, &#34;debug&#34;, &#34;show&#34;, &#34;ping&#34;, &#34;page&#34;, &#34;hide&#34;, &#34;off&#34;, &#34;on&#34; ], t.factory = function(e) { return function() { var n = Array.prototype.slice.call(arguments); return n.unshift(e), t.push(n), t; }; }, t.methods.forEach(function(e) { t[e] = t.</description>
+      <description>Test2.</description>
     </item>
     
     <item>
