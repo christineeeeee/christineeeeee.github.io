@@ -20,11 +20,18 @@
 </style>
  
 <script>
-function preventBehavior(e) {
-  e.preventDefault(); 
-};
-
+// prevent background image being dragged on mobile device
+function preventBehavior(e) { e.preventDefault(); };
 document.addEventListener("touchmove", preventBehavior, {passive: false});
+
+// define favicon
+var link = document.querySelector("link[rel~='icon']");
+if (!link) {
+    link = document.createElement('link');
+    link.rel = 'icon';
+    document.getElementsByTagName('head')[0].appendChild(link);
+}
+link.href = 'avatar_blue.jpg';
 </script>
 
 
