@@ -107,6 +107,11 @@
   <div class="about">
     
       <div class="avatar"><img src="/images/avatar.jpg" alt="avatar"></div>
+      <script>
+      
+      function preventBehavior(e) { e.preventDefault(); };
+      document.addEventListener("touchmove", preventBehavior, {passive: false});
+      </script>
     
     <h1>Christine</h1>
     <h2>My Flower and Death</h2>
