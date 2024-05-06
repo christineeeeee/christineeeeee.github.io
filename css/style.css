@@ -527,3 +527,11 @@ img[src$="#border"] {
     -moz-column-rule-color: black;
     column-rule-color: black;
 }
+
+/* Small Screen */
+@media (max-width: 600px) {
+    blockquote {
+        margin: 1em 1em;
+        padding: 1em; 
+    }
+}
