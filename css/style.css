@@ -90,7 +90,7 @@ blockquote > p:before {
     position: absolute;
     left: 0;
     top: 0;
-    margin-top: -0.5em !important;
+    margin-top: 0.5em !important;
     margin-left: 0.2em !important;
     content: open-quote;
     font-size: 2.5em;
@@ -100,8 +100,8 @@ blockquote > p:after {
     position: absolute;
     right: 0;
     bottom: 0;
-    margin-right: 0.1em !important;
-    margin-bottom: -1.1em !important;
+    margin-right: 0.2em !important;
+    margin-bottom: 0.5em !important;
     content: close-quote;
     font-size: 2.5em;
 }
