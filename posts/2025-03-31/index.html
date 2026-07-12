@@ -151,11 +151,87 @@
         
 
         
-          <p>你好啊。凌晨一点多，我坐在书桌前，像悲伤蛙一样默默流泪。哭的原因很简单，根本不会javascript，硬生生在这儿debug，de得悲从中来，又没有你在身边安慰我，就很没出息地哭了。说来也是得怪我，知道这事儿变数很多，还没完全解决，可还是没忍住，上周实在是太累了，这周末实在是提不起精神工作。今晚拖拖拉拉，炸完鸡排，看完剧，好不容易坐在书桌前，搞出了点名堂，之后发现不对，又加了几行代码，就跑不下去了。</p>
+          <div
+            class="protected-post"
+            data-password-hash="723a91620a19e6d73f55af14519893e9c431355db045153b3b7fdb4bb1233a2a"
+            data-storage-key="post-unlocked:/posts/2025-03-31/">
+            <div class="protected-post__gate">
+              <h2>This post is private</h2>
+              <p>Enter the password to view this post.</p>
+              
+                <p class="protected-post__hint">Hint: our anniversary</p>
+              
+              <form class="protected-post__form">
+                <label for="post-password">Password</label>
+                <input id="post-password" name="password" type="password" autocomplete="current-password" required />
+                <button type="submit">Unlock</button>
+              </form>
+              <p class="protected-post__error" hidden>That password didn&apos;t match.</p>
+            </div>
+            <div class="protected-post__content" hidden>
+              <p>你好啊。凌晨一点多，我坐在书桌前，像悲伤蛙一样默默流泪。哭的原因很简单，根本不会javascript，硬生生在这儿debug，de得悲从中来，又没有你在身边安慰我，就很没出息地哭了。说来也是得怪我，知道这事儿变数很多，还没完全解决，可还是没忍住，上周实在是太累了，这周末实在是提不起精神工作。今晚拖拖拉拉，炸完鸡排，看完剧，好不容易坐在书桌前，搞出了点名堂，之后发现不对，又加了几行代码，就跑不下去了。</p>
 <p>说来真的是，都过去这么久了，工作遇到坎儿的时候，还是会很想你。一方面当然因为你是万能的，你在的话，我什么bug都不害怕，但你不在身边儿也已经很久了，我也习惯了自己焦头烂额最后想办法捣鼓出点儿东西来的这种状况了；最重要的另一方面，可能还是想念那种你在我身边，我心里踏踏实实，知道自己往背后倒下去，就可以被你接住的感觉了。唉，这么说，听上去很像在利用你。真的不是啊，你别误会。我只是单纯很想你了。真的是很想你。想你这个人，你在我身边时我的感觉，不是想你的利用价值。</p>
 <p>知道这样听上去越描越黑。其实也没事。没人看得见这些絮絮叨叨，我自己知道我想念的是你就够了。</p>
 <p>我们楼隔音好，很大声哭也没事。于是我就很大声地在书房哭了一会儿。一转头，看到ino趴在身后目不转睛地盯着我，一点儿不像是被我吓到的样子。</p>
 
+            </div>
+          </div>
+          <script>
+            (function () {
+              var root = document.currentScript.previousElementSibling;
+              if (!root) return;
+
+              var gate = root.querySelector(".protected-post__gate");
+              var content = root.querySelector(".protected-post__content");
+              var form = root.querySelector(".protected-post__form");
+              var input = form && form.elements.namedItem("password");
+              var error = root.querySelector(".protected-post__error");
+              var storedHash = root.getAttribute("data-password-hash");
+              var storageKey = root.getAttribute("data-storage-key");
+
+              function unlock() {
+                gate.hidden = true;
+                content.hidden = false;
+                error.hidden = true;
+              }
+
+              if (window.sessionStorage && sessionStorage.getItem(storageKey) === storedHash) {
+                unlock();
+                return;
+              }
+
+              if (!window.crypto || !window.crypto.subtle || !form || !input) {
+                if (error) {
+                  error.hidden = false;
+                  error.textContent = "Password protection requires a modern browser.";
+                }
+                return;
+              }
+
+              form.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                error.hidden = true;
+
+                var encoder = new TextEncoder();
+                var data = encoder.encode(input.value);
+                var digest = await window.crypto.subtle.digest("SHA-256", data);
+                var hash = Array.from(new Uint8Array(digest))
+                  .map(function (byte) { return byte.toString(16).padStart(2, "0"); })
+                  .join("");
+
+                if (hash === storedHash) {
+                  if (window.sessionStorage) {
+                    sessionStorage.setItem(storageKey, storedHash);
+                  }
+                  unlock();
+                  form.reset();
+                  return;
+                }
+
+                error.hidden = false;
+              });
+            })();
+          </script>
         
       </div>
 

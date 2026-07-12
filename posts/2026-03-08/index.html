@@ -151,7 +151,25 @@
         
 
         
-          <p>今天在思考，人生就是在不断deal with一些重复的情绪和问题，一次又一次。就在你觉得你已经moved on from those issues时，熟悉的问题会突然又出现，haunt on you。</p>
+          <div
+            class="protected-post"
+            data-password-hash="723a91620a19e6d73f55af14519893e9c431355db045153b3b7fdb4bb1233a2a"
+            data-storage-key="post-unlocked:/posts/2026-03-08/">
+            <div class="protected-post__gate">
+              <h2>This post is private</h2>
+              <p>Enter the password to view this post.</p>
+              
+                <p class="protected-post__hint">Hint: our anniversary</p>
+              
+              <form class="protected-post__form">
+                <label for="post-password">Password</label>
+                <input id="post-password" name="password" type="password" autocomplete="current-password" required />
+                <button type="submit">Unlock</button>
+              </form>
+              <p class="protected-post__error" hidden>That password didn&apos;t match.</p>
+            </div>
+            <div class="protected-post__content" hidden>
+              <p>今天在思考，人生就是在不断deal with一些重复的情绪和问题，一次又一次。就在你觉得你已经moved on from those issues时，熟悉的问题会突然又出现，haunt on you。</p>
 <p>夏令时结束了，冬天彻底过去了。在2025年的冬天来临之前，我严阵以待，做好了十足的准备，决定积极对抗芝加哥的冬天。我买了日照灯，开始强迫自己多接受日照，多出门散步，多打扫卫生。工作恰好也很忙，一眨眼，我的生日过去了，你的生日也过去了。春天来了，我又久违地抑郁了。</p>
 <p>这次不是莫名其妙地崩溃 - 我的人生中现在其实已经不再有这种莫名其妙不高兴的瞬间了，莫名其妙不开心是一种奢侈，以前的我可以莫名其妙地不开心，但现在不会了。我其实是发现，或许我断断续续做了一年多的这个梦，终于要碎了。原来之前的自己，还是活在一个粉色泡泡里，还是有一些幻想，还是在期待一些什么。现在，似乎要被迫面临真实的世界了，或许我还是被骗了，或许我还是不该去奢望些什么。这是生活要教会我的吗？也是极有可能的。我可能以前还是再走一条捷径，在试图得到second chance？what if second chance eventually doesn&rsquo;t exist? did i actually still want to cheat? all the confession were still targeting something i want, and those are still kinda performative - probably performing for myself. like if i tried harder, confessed harder, maybe i can eventually forgive myself, or successfully persuade myself that i deserve something good again.</p>
 <p>在意识到这些之后，又一次直面最坏的情况，我发现自己还是很痛苦，感觉之前的痛苦又回来了，感觉过去一年半，像是什么都没发生一样，我一下又回到了最痛苦的时候。我其实已经很久没有过这么难受的时候了，又一次直面这种痛苦，说实话，还真的挺难的。想想看，也合理，人第一次被子弹打中，肉体面临极致的陌生的痛苦，花了很久愈合，但这并不代表着当子弹第二次贯穿你的身体的时候，那种痛苦就会减轻 - 你只是更熟悉这种痛苦了，因为你曾经感受过这是什么感觉，这种痛苦在恢复期不断地折磨着你，一次次提醒你，不要再被子弹打中了，因为真的太痛了 - 这不代表你的肌肉会对子弹麻木。</p>
@@ -164,6 +182,64 @@
 <p>写到这里才意识到，今天是三八妇女节。说实话，很想出去旅行，见几个真正关心我的人，stay away from the real world，get distracted。但我没钱，没时间。i got someone to rely on but i need to pay for that. and i guess the most painful part is, maybe eventually i&rsquo;ll realize that&rsquo;s bad for me. i&rsquo;ve been fooled, been eventually led to the same trap. i&rsquo;ll lose some money, be desperate again and hurt so so so much again. and eventually, maybe slowly recover from it. i guess i again have this fear that i might never be better again. when i say this, i mean it. i&rsquo;m starting to be worried about, what if time can&rsquo;t heal everything. what if this is something that i can&rsquo;t recover from? just thinking about this possibility makes me so so so sad.</p>
 <p>妈妈昨天跟我讲，奶奶可能快不行了。我其实跟她没有那么亲近，可是，我发现我被困在这里，出不去，甚至现在中美局势已经紧张到我都没法找这个借口回国。how pathetic。what a pathetic life。</p>
 
+            </div>
+          </div>
+          <script>
+            (function () {
+              var root = document.currentScript.previousElementSibling;
+              if (!root) return;
+
+              var gate = root.querySelector(".protected-post__gate");
+              var content = root.querySelector(".protected-post__content");
+              var form = root.querySelector(".protected-post__form");
+              var input = form && form.elements.namedItem("password");
+              var error = root.querySelector(".protected-post__error");
+              var storedHash = root.getAttribute("data-password-hash");
+              var storageKey = root.getAttribute("data-storage-key");
+
+              function unlock() {
+                gate.hidden = true;
+                content.hidden = false;
+                error.hidden = true;
+              }
+
+              if (window.sessionStorage && sessionStorage.getItem(storageKey) === storedHash) {
+                unlock();
+                return;
+              }
+
+              if (!window.crypto || !window.crypto.subtle || !form || !input) {
+                if (error) {
+                  error.hidden = false;
+                  error.textContent = "Password protection requires a modern browser.";
+                }
+                return;
+              }
+
+              form.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                error.hidden = true;
+
+                var encoder = new TextEncoder();
+                var data = encoder.encode(input.value);
+                var digest = await window.crypto.subtle.digest("SHA-256", data);
+                var hash = Array.from(new Uint8Array(digest))
+                  .map(function (byte) { return byte.toString(16).padStart(2, "0"); })
+                  .join("");
+
+                if (hash === storedHash) {
+                  if (window.sessionStorage) {
+                    sessionStorage.setItem(storageKey, storedHash);
+                  }
+                  unlock();
+                  form.reset();
+                  return;
+                }
+
+                error.hidden = false;
+              });
+            })();
+          </script>
         
       </div>
 

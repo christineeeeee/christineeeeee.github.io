@@ -145,8 +145,84 @@
         
 
         
-          <p>哭的时候都是回想到你哭的时候，你受折磨的时候，你一次次想要再有一点希望却又被现实打击到的时候。这些时候才是让我难受的。那些真正下定决心了之后的冷漠也好，决绝也好，我其实反而，不难受了。难受的是what i put you through and how you handled them without me。想到这个，想到我花了这么长的时间彻底fuck up，彻底辜负了一个人，这才是真正让我难受的地方。</p>
+          <div
+            class="protected-post"
+            data-password-hash="723a91620a19e6d73f55af14519893e9c431355db045153b3b7fdb4bb1233a2a"
+            data-storage-key="post-unlocked:/posts/2025-11-09/">
+            <div class="protected-post__gate">
+              <h2>This post is private</h2>
+              <p>Enter the password to view this post.</p>
+              
+                <p class="protected-post__hint">Hint: our anniversary</p>
+              
+              <form class="protected-post__form">
+                <label for="post-password">Password</label>
+                <input id="post-password" name="password" type="password" autocomplete="current-password" required />
+                <button type="submit">Unlock</button>
+              </form>
+              <p class="protected-post__error" hidden>That password didn&apos;t match.</p>
+            </div>
+            <div class="protected-post__content" hidden>
+              <p>哭的时候都是回想到你哭的时候，你受折磨的时候，你一次次想要再有一点希望却又被现实打击到的时候。这些时候才是让我难受的。那些真正下定决心了之后的冷漠也好，决绝也好，我其实反而，不难受了。难受的是what i put you through and how you handled them without me。想到这个，想到我花了这么长的时间彻底fuck up，彻底辜负了一个人，这才是真正让我难受的地方。</p>
 
+            </div>
+          </div>
+          <script>
+            (function () {
+              var root = document.currentScript.previousElementSibling;
+              if (!root) return;
+
+              var gate = root.querySelector(".protected-post__gate");
+              var content = root.querySelector(".protected-post__content");
+              var form = root.querySelector(".protected-post__form");
+              var input = form && form.elements.namedItem("password");
+              var error = root.querySelector(".protected-post__error");
+              var storedHash = root.getAttribute("data-password-hash");
+              var storageKey = root.getAttribute("data-storage-key");
+
+              function unlock() {
+                gate.hidden = true;
+                content.hidden = false;
+                error.hidden = true;
+              }
+
+              if (window.sessionStorage && sessionStorage.getItem(storageKey) === storedHash) {
+                unlock();
+                return;
+              }
+
+              if (!window.crypto || !window.crypto.subtle || !form || !input) {
+                if (error) {
+                  error.hidden = false;
+                  error.textContent = "Password protection requires a modern browser.";
+                }
+                return;
+              }
+
+              form.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                error.hidden = true;
+
+                var encoder = new TextEncoder();
+                var data = encoder.encode(input.value);
+                var digest = await window.crypto.subtle.digest("SHA-256", data);
+                var hash = Array.from(new Uint8Array(digest))
+                  .map(function (byte) { return byte.toString(16).padStart(2, "0"); })
+                  .join("");
+
+                if (hash === storedHash) {
+                  if (window.sessionStorage) {
+                    sessionStorage.setItem(storageKey, storedHash);
+                  }
+                  unlock();
+                  form.reset();
+                  return;
+                }
+
+                error.hidden = false;
+              });
+            })();
+          </script>
         
       </div>
 
