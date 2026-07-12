@@ -119,6 +119,86 @@
     </header>
 
     
+    
+    
+      <div
+        class="protected-post"
+        data-password-hash="38a9c1e721584da284b90ceea4ed7eb8db15ac4ea86c2c75ec925d5f8799fcf0"
+        data-storage-key="page-unlocked:/projectnew/0/">
+        <div class="protected-post__gate">
+          <h2>This page is private</h2>
+          <p>Enter the password to view this page.</p>
+          
+            <p class="protected-post__hint">Hint: frost</p>
+          
+          <form class="protected-post__form">
+            <label for="page-password">Password</label>
+            <input id="page-password" name="password" type="password" autocomplete="current-password" required />
+            <button type="submit">Unlock</button>
+          </form>
+          <p class="protected-post__error" hidden>That password didn&apos;t match.</p>
+        </div>
+        <div class="protected-post__content" hidden>
+          
+        </div>
+      </div>
+      <script>
+        (function () {
+          var root = document.currentScript.previousElementSibling;
+          if (!root) return;
+
+          var gate = root.querySelector(".protected-post__gate");
+          var content = root.querySelector(".protected-post__content");
+          var form = root.querySelector(".protected-post__form");
+          var input = form && form.elements.namedItem("password");
+          var error = root.querySelector(".protected-post__error");
+          var storedHash = root.getAttribute("data-password-hash");
+          var storageKey = root.getAttribute("data-storage-key");
+
+          function unlock() {
+            gate.hidden = true;
+            content.hidden = false;
+            error.hidden = true;
+          }
+
+          if (window.sessionStorage && sessionStorage.getItem(storageKey) === storedHash) {
+            unlock();
+            return;
+          }
+
+          if (!window.crypto || !window.crypto.subtle || !form || !input) {
+            if (error) {
+              error.hidden = false;
+              error.textContent = "Password protection requires a modern browser.";
+            }
+            return;
+          }
+
+          form.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            error.hidden = true;
+
+            var encoder = new TextEncoder();
+            var data = encoder.encode(input.value);
+            var digest = await window.crypto.subtle.digest("SHA-256", data);
+            var hash = Array.from(new Uint8Array(digest))
+              .map(function (byte) { return byte.toString(16).padStart(2, "0"); })
+              .join("");
+
+            if (hash === storedHash) {
+              if (window.sessionStorage) {
+                sessionStorage.setItem(storageKey, storedHash);
+              }
+              unlock();
+              form.reset();
+              return;
+            }
+
+            error.hidden = false;
+          });
+        })();
+      </script>
+    
   </article>
 </section>
 
