@@ -149,17 +149,97 @@ anyway。最近重看了girls。上次看是六年前吧，很struggle地找工�
         </div>
       </header>
 
+      
+      
       <div>
         
-        <p>写这篇帖子不是为了说这件事，但打开文档，突然意识到，一个月以前吧，google analytics给我发了一个邮件，分析我这个网站的流量（我甚至完全不记得自己是什么时候设置的…），无意间点开，本来想随便看下，结果发现竟然真的有活人在看我这个网站，而且是不少活人…</p>
+
+        
+          <div
+            class="protected-post"
+            data-password-hash="723a91620a19e6d73f55af14519893e9c431355db045153b3b7fdb4bb1233a2a"
+            data-storage-key="post-unlocked:/posts/2026-07-03/">
+            <div class="protected-post__gate">
+              <h2>This post is private</h2>
+              <p>Enter the password to view this post.</p>
+              
+                <p class="protected-post__hint">Hint: our anniversary</p>
+              
+              <form class="protected-post__form">
+                <label for="post-password">Password</label>
+                <input id="post-password" name="password" type="password" autocomplete="current-password" required />
+                <button type="submit">Unlock</button>
+              </form>
+              <p class="protected-post__error" hidden>That password didn&apos;t match.</p>
+            </div>
+            <div class="protected-post__content" hidden>
+              <p>写这篇帖子不是为了说这件事，但打开文档，突然意识到，一个月以前吧，google analytics给我发了一个邮件，分析我这个网站的流量（我甚至完全不记得自己是什么时候设置的…），无意间点开，本来想随便看下，结果发现竟然真的有活人在看我这个网站，而且是不少活人…</p>
 <p>我一直把这里当作一个完全没人光顾的角落，毕竟我也没有怎么公开过这个网站（上次公开是五年前了吧，很快就删了），完全不知道很多人是怎么找到这里来的。尽可能有礼貌地说一句：虽然我不知道你们是谁，但，no offense，it&rsquo;s kinda creepy as fuck?&hellip; this is some private shit, 虽然我现在也不怎么give a fuck，但还是要给除了一个人之外，所有定期光顾这里阅读我写的东西的人说一句， go get a life&hellip;</p>
 <p>我实在是很懒，也的确don&rsquo;t give a damn, 不然的话，一个月以前刚发现这件事前就会给一些post设置密码了。过阵子应该还是会想个办法做这件事吧。</p>
 <p>（本来想写点伤感的东西的，结果写上面这段话的时候真的觉得我这个网站竟然有人来定期观看真的ridiculous as fuck.. 然后伤感的心情一扫而空，只觉得世界荒谬且好笑..）</p>
 <p>anyway。最近重看了girls。上次看是六年前吧，很struggle地找工作的时候。这次看，很多时候都从她们身上看到自己的丑陋之处，被自己以前做的很多事恶心到。人生从来没有哪个阶段是这么能被别人做的不好的事情remind自己活在这个世界上二十几年所做的蠢事、且被自己好笑到、恶心到的。我说这些话的时候，其实很平静，有点像灵魂出窍，审视那段时间的自己，然后一部分灵魂附着在你的身上，不知道当时的你是否也像此刻的我一样，被我自己的虚伪、自私、愚蠢给惊到。看girls的过程中，看她们每个人伤害别人、和别人争吵、理直气壮为自己辩解、永远把任何事扯到自己身上，我发现自己和她们是一样的。以前我其实以为自己是something special，所以当我做这些事时，它们就都是ok的。但其实不是这样的。i&rsquo;m no different than them. actually, i was even worse.</p>
 <p>所以才更要谢谢你。谢谢你依然在用你的方式，关心着我，包容着我。你其实没有必要做到这些的。but you&rsquo;re a good person. and i could never be as 1% as good as you.</p>
 
-      </div>
+            </div>
+          </div>
+          <script>
+            (function () {
+              var root = document.currentScript.previousElementSibling;
+              if (!root) return;
 
+              var gate = root.querySelector(".protected-post__gate");
+              var content = root.querySelector(".protected-post__content");
+              var form = root.querySelector(".protected-post__form");
+              var input = form && form.elements.namedItem("password");
+              var error = root.querySelector(".protected-post__error");
+              var storedHash = root.getAttribute("data-password-hash");
+              var storageKey = root.getAttribute("data-storage-key");
+
+              function unlock() {
+                gate.hidden = true;
+                content.hidden = false;
+                error.hidden = true;
+              }
+
+              if (window.sessionStorage && sessionStorage.getItem(storageKey) === storedHash) {
+                unlock();
+                return;
+              }
+
+              if (!window.crypto || !window.crypto.subtle || !form || !input) {
+                if (error) {
+                  error.hidden = false;
+                  error.textContent = "Password protection requires a modern browser.";
+                }
+                return;
+              }
+
+              form.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                error.hidden = true;
+
+                var encoder = new TextEncoder();
+                var data = encoder.encode(input.value);
+                var digest = await window.crypto.subtle.digest("SHA-256", data);
+                var hash = Array.from(new Uint8Array(digest))
+                  .map(function (byte) { return byte.toString(16).padStart(2, "0"); })
+                  .join("");
+
+                if (hash === storedHash) {
+                  if (window.sessionStorage) {
+                    sessionStorage.setItem(storageKey, storedHash);
+                  }
+                  unlock();
+                  form.reset();
+                  return;
+                }
+
+                error.hidden = false;
+              });
+            })();
+          </script>
+        
+      </div>
 
       <footer>
         

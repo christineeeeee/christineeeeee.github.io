@@ -141,9 +141,13 @@
         </div>
       </header>
 
+      
+      
       <div>
         
-        <p>A classic probability problem: repeatedly toss a coin until consecutive pattern HTHT shows up, what&rsquo;s the expected number of tosses?</p>
+
+        
+          <p>A classic probability problem: repeatedly toss a coin until consecutive pattern HTHT shows up, what&rsquo;s the expected number of tosses?</p>
 <div style="display:block;width:100%;text-align:center">
 <img src="/images/toss_coin.jpg" style="width:60%">
 </div>
@@ -162,8 +166,8 @@
 <p>Back to the HTHT game, we could calculate the sum of the money of all the gamblers who are still in the game in order to know the expectation of $\tau$. We know that only $\tau - 3$th day to $\tau$th day are still in the game since $\tau$th day is the first time when the pattern HTHT shows up. The gambler who came to the casino is the luckiest guy since he&rsquo;s got all the tosses correct so he has 16 dollars; for the gambler who comes to the casino on the $\tau - 1$th day got his first two tosses correct so he has 4 dollars. For gamblers who comes to the casino on the $\tau - 2$th day and $\tau$th day, they came and tossed T first so their tosses didn&rsquo;t meet with the pattern and they lost all of their money. In all, there are 20 dollars in the gamblers&rsquo; hands so $E\tau$ = 20, which represents the expected number of tosses we need to get the correct pattern.</p>
 <p>It may not seem that obvious that this approach is more efficient but for longer pattern such as 6Hs, this approach shows its edge. If we use markov chain to do this problem, it is long and tedious but if we use this way, $E\tau$ = $2^6 + 2^5 + 2^4 + 2^3 + 2^2 + 2$ = 126.</p>
 
+        
       </div>
-
 
       <footer>
         
